@@ -29,8 +29,8 @@ def bot():
     if ner_input:
         missing = [i for i in reserved if i not in ner_input]
         if missing:
-                # TODO: present the missing entities in a string format
                 msg.body(f"this is missing: {missing}")
+                responded = True
         else:
             for ent in spacy_res.ents:
                 if ent.label_ == "DATE":
@@ -38,7 +38,7 @@ def bot():
                 if ent.label_ == "NUTRIENT":
                     nutrient = ent.text
                 msg.body(date, nutrient)
-    responded = True 
+                responded = True
     if not responded:
         msg.body("I only know about famous quotes and cats, sorry!")
     return str(resp)
