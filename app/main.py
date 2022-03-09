@@ -8,6 +8,8 @@ app = Flask(__name__)
 
 @app.route("/bot", methods=["POST"])
 def bot():
+    resp = MessagingResponse()
+    msg = resp.message()
     reserved = ["DATE", "NUTRIENT"]
     ner_input = []  # empty list
     incoming_msg = request.values.get("Body", "").lower()  # inp
@@ -30,7 +32,6 @@ def bot():
 
     resp = MessagingResponse()
     msg = resp.message()
-    print(incoming_msg)
     responded = False
     if "quote" in incoming_msg:
         # return a quote
