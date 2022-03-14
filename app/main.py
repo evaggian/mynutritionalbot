@@ -1,7 +1,9 @@
 from flask import Flask, request
 from app.spacy_model import nlp_ner
 import requests
+import json
 from twilio.twiml.messaging_response import MessagingResponse
+from app.myfitnesspal_db import get_info
 
 app = Flask(__name__)
 
@@ -37,8 +39,17 @@ def bot():
                     date = ent.text
                 if ent.label_ == "NUTRIENT":
                     nutrient = ent.text
-                msg.body(date, nutrient)
-                responded = True
+            
+            msg.body("Let me check that for you...")
+
+            # TODO: connect to database and get information
+            user_name = "evabot22"
+            user_stats = get_info(user_name, date, nutrient)
+            msg.body(date + nutrient)
+            msg.body(json.dumps(user_stats))
+
+
+            responded = True
     if not responded:
         msg.body("I only know about famous quotes and cats, sorry!")
     return str(resp)
