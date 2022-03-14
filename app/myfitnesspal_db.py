@@ -1,10 +1,44 @@
-from math import remainder
 import myfitnesspal
-import calendar
 import datetime
+import mysql.connector
 from datetime import date, timedelta
+import database_config as cfg
+
 
 client = myfitnesspal.Client('evaggiab', password="myChatbot2022")
+
+def initialize_db():
+
+    try:
+        mychatbot_db = mysql.connector.connect(
+            host=cfg.mysql["host"],
+            user=cfg.mysql["user"],
+            password=cfg.mysql["password"]
+        )
+
+        mycursor = mychatbot_db.cursor()
+        mycursor.execute("CREATE DATABASE IF NOT EXISTS heroku_5f2973cbf7c2b89")
+        mycursor.execute(""" CREATE TABLE IF NOT EXISTS `heroku_5f2973cbf7c2b89`.`users` (
+            `id` INT NOT NULL,
+            `username` VARCHAR(45) NOT NULL,
+            `nl_level` INT NOT NULL,
+            UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+            PRIMARY KEY (`id`),
+            UNIQUE INDEX `username_UNIQUE` (`username` ASC))
+            PACK_KEYS = Default; """)
+        
+        # add your dummy user
+        #mycursor.execute("""INSERT INTO `heroku_5f2973cbf7c2b89`.`users` (`id`, `username`, `nl_level`) VALUES ('1', 'evabot22', '1');""")
+        mychatbot_db.commit()
+
+    except mysql.connector.Error as error:
+        print("Failed to connect {}".format(error))
+    
+    finally:
+        if mychatbot_db.is_connected():
+            mycursor.close()
+            mychatbot_db.close()
+            print("MySQL connection is closed")
 
 #print(client._user_metadata["goal_displays"][0]["nutrients"])
 
@@ -73,4 +107,28 @@ def get_info(user_name, date_input, nutrient):
 
         return avg_remainder
 
-#get_info('evaggiab', 'today','overview')   
+#get_info('evaggiab', 'today','overview')  
+
+
+def get_NL_level(user_name):
+    try:
+        mychatbot_db = mysql.connector.connect(
+            host=cfg.mysql["host"],
+            user=cfg.mysql["user"],
+            password=cfg.mysql["password"]
+        )
+
+        mycursor = mychatbot_db.cursor()
+        mycursor.execute("SELECT nl_level from `heroku_5f2973cbf7c2b89`.`users` where username = %s", (user_name,))
+        record = mycursor.fetchone()
+
+        return record[0]
+
+    except mysql.connector.Error as error:
+        print("Failed to get record from MySQL table: {}".format(error))
+    
+    finally:
+        if mychatbot_db.is_connected():
+            mycursor.close()
+            mychatbot_db.close()
+            print("MySQL connection is closed")

@@ -3,13 +3,19 @@ from app.spacy_model import nlp_ner
 import requests
 import json
 from twilio.twiml.messaging_response import MessagingResponse
-from app.myfitnesspal_db import get_info
+from app.myfitnesspal_db import get_info, initialize_db, get_NL_level
 
 app = Flask(__name__)
 
 
 @app.route("/bot", methods=["POST"])
 def bot():
+
+    initialize_db()
+
+    #TODO: initiate conversation and ask for the user's name
+    #TODO: ask for the user's name on MFP as well
+
     """ instantiate lists """
     reserved = ["DATE", "NUTRIENT"]
     ner_input = []  # empty list
@@ -45,8 +51,17 @@ def bot():
             # TODO: connect to database and get information
             user_name = "evabot22"
             user_stats = get_info(user_name, date, nutrient)
-            msg.body(date + nutrient)
-            msg.body(json.dumps(user_stats))
+
+            user_NL_level = get_NL_level(user_name)
+        
+            if (user_NL_level == 1):
+                msg.body("You are doing great" + json.dumps(user_stats))
+            else :
+                #TODO: create conditions for level 2 and level 3
+                print("unknown level" + user_NL_level)
+                #msg.body(date + nutrient)
+                msg.body(json.dumps(user_stats))
+
 
 
             responded = True

@@ -18,3 +18,4 @@ spacy==3.2.3
 spacy-legacy==3.0.9
 spacy-loggers==1.0.1
 myfitnesspal==1.16.6
+mysql-connector-python
