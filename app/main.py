@@ -1,3 +1,4 @@
+import time
 from flask import Flask, request
 from app.spacy_model import nlp_ner
 import requests
@@ -48,23 +49,36 @@ def bot():
             
             msg.body("Let me check that for you...")
 
-            # TODO: connect to database and get information
             user_name = "evabot22"
             user_stats = get_info(user_name, date, nutrient)
 
             user_NL_level = get_NL_level(user_name)
         
             if (user_NL_level == 1):
-                msg.body("You are doing great" + json.dumps(user_stats))
+                msg = resp.message()
+                msg.body("You are doing great! 😁")
+
+                msg = resp.message()
+                msg.body("Protein: " + str(user_stats["protein"]) +"\n" + 
+                "Carbs: " + str(user_stats["carbohydrates"]) + "\n" +
+                "Fat: " + str(user_stats["fat"]) + "\n" +
+                "Sugar: " + str(user_stats["sugar"]) + "\n" +
+                "Sodium: " + str(user_stats["sodium"]) + "\n" +
+                "Calories: " + str(user_stats["calories"]) + "\n")
+
+                #msg.media("https://picsum.photos/200/300")
+
+            elif (user_NL_level == 2):
+                msg = resp.message()
+                msg.body("medium level" + json.dumps(user_stats))
             else :
-                #TODO: create conditions for level 2 and level 3
-                print("unknown level" + user_NL_level)
-                #msg.body(date + nutrient)
-                msg.body(json.dumps(user_stats))
+                msg = resp.message()
+                msg.body("high level" + json.dumps(user_stats))
+                msg.media("https://demo.twilio.com/owl.png")
 
-
-
+            msg = resp.message()
+            msg.body("Is everything clear to you?")
             responded = True
     if not responded:
-        msg.body("I only know about famous quotes and cats, sorry!")
+        msg.body("I don't quite understand that. Can you repeat it please?")
     return str(resp)

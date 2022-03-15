@@ -9,13 +9,13 @@ client = myfitnesspal.Client('evaggiab', password="myChatbot2022")
 
 def initialize_db():
 
-    try:
-        mychatbot_db = mysql.connector.connect(
-            host=cfg.mysql["host"],
-            user=cfg.mysql["user"],
-            password=cfg.mysql["password"]
-        )
+    mychatbot_db = mysql.connector.connect(
+        host=cfg.mysql["host"],
+        user=cfg.mysql["user"],
+        password=cfg.mysql["password"]
+    )
 
+    try:
         mycursor = mychatbot_db.cursor()
         mycursor.execute("CREATE DATABASE IF NOT EXISTS heroku_5f2973cbf7c2b89")
         mycursor.execute(""" CREATE TABLE IF NOT EXISTS `heroku_5f2973cbf7c2b89`.`users` (
@@ -111,13 +111,13 @@ def get_info(user_name, date_input, nutrient):
 
 
 def get_NL_level(user_name):
+    
+    mychatbot_db = mysql.connector.connect(
+        host=cfg.mysql["host"],
+        user=cfg.mysql["user"],
+        password=cfg.mysql["password"]
+    )
     try:
-        mychatbot_db = mysql.connector.connect(
-            host=cfg.mysql["host"],
-            user=cfg.mysql["user"],
-            password=cfg.mysql["password"]
-        )
-
         mycursor = mychatbot_db.cursor()
         mycursor.execute("SELECT nl_level from `heroku_5f2973cbf7c2b89`.`users` where username = %s", (user_name,))
         record = mycursor.fetchone()
