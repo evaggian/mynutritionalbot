@@ -18,7 +18,7 @@ def bot():
     #TODO: ask for the user's name on MFP as well
 
     """ instantiate lists """
-    reserved = ["DATE", "NUTRIENT"]
+    reserved = ["DATE"]
     ner_input = []  # empty list
     
     """ get the response of the bot"""
@@ -35,22 +35,31 @@ def bot():
         ner_input.append(ent.label_)
     
     """if the list is not empty check which entity is missing and save it to a list"""
+    nutrient = ""
+    insight = "overview"
     if ner_input:
         missing = [i for i in reserved if i not in ner_input]
         if missing:
-                msg.body(f"this is missing: {missing}")
+                msg.body("Can you specify for which day please?")
+                #print("this is missing: {missing}")
                 responded = True
         else:
             for ent in spacy_res.ents:
                 if ent.label_ == "DATE":
                     date = ent.text
+                    #TODO: identify if it's 'today','last week', 'last month','12/12/12','12-05-12',''
                 if ent.label_ == "NUTRIENT":
                     nutrient = ent.text
+                    #TODO: identify if it's any of the 5 nutrients
+                if ent.label_ == "INSIGHT":
+                    insight = ent.text
+                    print(insight)
+                    #TODO: identify if it's 'overview', 'comparison'
             
             msg.body("Let me check that for you...")
 
             user_name = "evabot22"
-            user_stats = get_info(user_name, date, nutrient)
+            user_stats = get_info(user_name ,date ,nutrient ,insight)
 
             user_NL_level = get_NL_level(user_name)
         
