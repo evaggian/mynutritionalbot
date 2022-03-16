@@ -1,8 +1,7 @@
-import time
 from flask import Flask, request
 from app.spacy_model import nlp_ner
-import requests
 import json
+from app.date import get_date
 from twilio.twiml.messaging_response import MessagingResponse
 from app.myfitnesspal_db import get_info, initialize_db, get_NL_level
 
@@ -44,10 +43,11 @@ def bot():
                 #print("this is missing: {missing}")
                 responded = True
         else:
+            date_list = []
             for ent in spacy_res.ents:
-                if ent.label_ == "DATE":
-                    date = ent.text
-                    #TODO: identify if it's 'today','last week', 'last month','12/12/12','12-05-12',''
+                if ent.label_ == "DATE":            # take the user's input of date and convert it to a datetime obj.
+                    date = get_date(ent.text)
+                    date_list.append(date)          # add it to a list, if the user inputs multiple dates-> intends to compare
                 if ent.label_ == "NUTRIENT":
                     nutrient = ent.text
                     #TODO: identify if it's any of the 5 nutrients
@@ -58,8 +58,8 @@ def bot():
             
             msg.body("Let me check that for you...")
 
-            user_name = "evabot22"
-            user_stats = get_info(user_name ,date ,nutrient ,insight)
+            user_name = "evaggiab"
+            user_stats = get_info(user_name ,date_list ,nutrient ,insight)
 
             user_NL_level = get_NL_level(user_name)
         

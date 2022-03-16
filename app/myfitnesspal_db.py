@@ -61,16 +61,19 @@ def get_info(user_name, date_input, nutrient, insight):
 
     if insight == "overview":
         # if date is single date
-        if date_input == "today":
-            friend_current_stats = client.get_date(datetime.date.today().year, datetime.date.today().month, datetime.date.today().day, username=user_name)
+        if len(date_input) == 1:
+            friend_current_stats = client.get_date(date_input[0].year, date_input[0].month, date_input[0].day, username=user_name)
             remainder_stats = calculate_remainder(friend_current_stats.totals, friend_current_stats.goals)
             #print(remainder_stats)
             return remainder_stats
 
         # if it is a comparison between dates
         else:
-            start_date = date(2022, 2, 27)
-            end_date = date(2022, 3, 5)
+            start_date = date_input[0]
+            end_date = date_input[1]
+
+            print(start_date)
+            print(end_date)
 
             # initialize dictionaries with 0
             totals = dict.fromkeys(['calories','carbohydrates','fat','protein','sodium','sugar'], 0)
@@ -93,6 +96,7 @@ def get_info(user_name, date_input, nutrient, insight):
 
             # calculate average totals among the number of days entried and round it to 1 digit
             # if there are no entries, create a dict with 0
+            print(no_entries)
             if (no_entries == 0):
                 avg_totals = {k: 0 for k in set(totals)}
             else:
