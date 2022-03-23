@@ -54,9 +54,9 @@ def daterange(start_date, end_date):
         yield start_date + timedelta(n)
 
 # retrieve totals, goals and remainder stats (5 nutrients + calories)
-def get_info(user_name, date_input, nutrient, insight):
+def get_date_stats(user_name, date_input, insight):
 
-    print(user_name, date_input, nutrient, insight)
+    print("REQUESTS DATA FOR: " + user_name, date_input, insight)
     #TODO: identiify 'date' parameter = convert it from text to 2 days or 1 date
 
     if insight == "overview":
@@ -64,7 +64,6 @@ def get_info(user_name, date_input, nutrient, insight):
         if len(date_input) == 1:
             friend_current_stats = client.get_date(date_input[0].year, date_input[0].month, date_input[0].day, username=user_name)
             remainder_stats = calculate_remainder(friend_current_stats.totals, friend_current_stats.goals)
-            #print(remainder_stats)
             return remainder_stats
 
         # if it is a comparison between dates
