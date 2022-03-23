@@ -4,6 +4,7 @@ import json
 from app.date import get_date
 from twilio.twiml.messaging_response import MessagingResponse
 from app.myfitnesspal_db import get_date_stats, initialize_db, get_NL_level
+from app.nutrientsInfo import get_more_info
 
 app = Flask(__name__)
 
@@ -17,12 +18,10 @@ def bot():
     #TODO: ask for the user's name on MFP as well
 
     """ instantiate lists """
-    reserved = ["DATE"]
     ner_input = []  # empty list
     
     """ get the response of the bot"""
     resp = MessagingResponse()
-    msg = resp.message()
     responded = False # set the bot response to false
 
     """get the message of the user"""
@@ -32,47 +31,83 @@ def bot():
     """extract entities from the spacy obj and append to empty list"""
     for ent in spacy_res.ents:
         ner_input.append(ent.label_)
-    
+        print(ent.text, ent.label_)
+
     """if the list is not empty check which entity is missing and save it to a list"""
     nutrient = ""
     insight = "overview"
+    more_info_requested = False
+    
     if ner_input:
-        missing = [i for i in reserved if i not in ner_input]
-        if missing:
-                msg.body("Can you specify for which day please?")
-                #print("this is missing: {missing}")
-                responded = True
-        else:
-            date_list = []
-            nutrient_list = []
-            for ent in spacy_res.ents:
-                if ent.label_ == "DATE":            # take the user's input of date and convert it to a datetime obj.
-                    date = get_date(ent.text)
-                    date_list.append(date)          # add it to a list, if the user inputs multiple dates-> intends to compare
-                if ent.label_ == "NUTRIENT":
-                    nutrient = ent.text
-                    nutrient_list.append(nutrient)
-                if ent.label_ == "INSIGHT":
-                    insight = ent.text
-                    print(insight)
-                    #TODO: identify if it's 'overview', 'comparison'
-            
-            msg.body("Let me check that for you...")
+        print(ner_input)
+        date_list = []
+        nutrient_list = []
+        for ent in spacy_res.ents:
+            if ent.label_ == "DATE":            # take the user's input of date and convert it to a datetime obj.
+                date = get_date(ent.text)
+                date_list.append(date)          # add it to a list, if the user inputs multiple dates-> intends to compare
+            if ent.label_ == "NUTRIENT":
+                nutrient = ent.text
+                nutrient_list.append(nutrient)
+            if ent.label_ == "INSIGHT":
+                insight = ent.text
+                
+                overview_words = ["going","trend","intake","doing","update","check","go","tell","data"]
+                compare_words = ["compare", "difference"]
+                overview = [i for i in overview_words if i in insight]
+                compare = [i for i in compare_words if i in insight]
 
-            #user_name = "evaggiab"
-            user_name = "evabot22"
+                if overview:
+                    insight = "overview"
+                elif compare:
+                    insight = "compare"
+
+            if ent.label_ == "MORE_INFO":
+                more_info_requested = True
+
+        if (not date_list):                 #if the user didn't specify for which date, show him info for today
+            date = get_date("today")
+            date_list.append(date) 
+        
+        # quick fix in case the user types a synonym for carbs, change it in the nutrient_list to shoow the right nutrient
+        carbs_synonyms = ["carbohydrates","carbs"]
+        for j in range(len(nutrient_list)):
+            carbs = [i for i in carbs_synonyms if i in nutrient_list]
+            if (carbs):
+                nutrient_list[j] = "carbohydrates"
+
+        #user_name = "evaggiab"
+        user_name = "evabot22"
+        user_NL_level = get_NL_level(user_name)
+
+        # if the user requested additional information
+        #TODO: implement cases that the user asks for questions "Which food had the highest sugar today?"
+        if (more_info_requested):
+            more_info = get_more_info(nutrient_list)
+            if (user_NL_level == 1):
+                msg = resp.message()
+                msg.body(more_info)
+            elif (user_NL_level == 2):
+                msg = resp.message()
+                msg.body(more_info)
+            else:
+                msg = resp.message()
+                msg.body(more_info)
+        else:
+            msg = resp.message()          
+            msg.body("Let me check that for you...")
             user_date_stats = get_date_stats(user_name ,date_list ,insight)
             #print(user_nutrient_stats)
-
-            user_NL_level = get_NL_level(user_name)
-        
+  
             if (user_NL_level == 1):
                 msg = resp.message()
                 msg.body("You are doing great! 😁")
 
                 msg = resp.message()
                 text = "\n"
+
                 print(nutrient_list)
+
                 if (len(nutrient_list) > 0):
                     for i in range(len(nutrient_list)):
                         if (nutrient_list[i] == 'protein'):
@@ -108,9 +143,9 @@ def bot():
                 msg.body("high level" + json.dumps(user_date_stats))
                 msg.media("https://demo.twilio.com/owl.png")
 
-            msg = resp.message()
-            msg.body("Is everything clear to you?")
-            responded = True
+        msg = resp.message()
+        msg.body("Is everything clear to you?")
+        responded = True
     if not responded:
         msg.body("I don't quite understand that. Can you repeat it please?")
     return str(resp)

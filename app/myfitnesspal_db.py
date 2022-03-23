@@ -57,7 +57,6 @@ def daterange(start_date, end_date):
 def get_date_stats(user_name, date_input, insight):
 
     print("REQUESTS DATA FOR: " + user_name, date_input, insight)
-    #TODO: identiify 'date' parameter = convert it from text to 2 days or 1 date
 
     if insight == "overview":
         # if date is single date
