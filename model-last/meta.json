@@ -21,11 +21,13 @@
 
     ],
     "ner":[
+      "COMPARE",
       "DATE",
       "FOOD",
       "INSIGHT",
       "MORE_INFO",
-      "NUTRIENT"
+      "NUTRIENT",
+      "VOLUME"
     ]
   },
   "pipeline":[
@@ -40,9 +42,9 @@
 
   ],
   "performance":{
-    "ents_f":0.998019802,
+    "ents_f":1.0,
     "ents_p":1.0,
-    "ents_r":0.9960474308,
+    "ents_r":1.0,
     "ents_per_type":{
       "NUTRIENT":{
         "p":1.0,
@@ -64,13 +66,23 @@
         "r":1.0,
         "f":1.0
       },
+      "VOLUME":{
+        "p":1.0,
+        "r":1.0,
+        "f":1.0
+      },
       "MORE_INFO":{
         "p":1.0,
-        "r":0.9583333333,
-        "f":0.9787234043
+        "r":1.0,
+        "f":1.0
+      },
+      "COMPARE":{
+        "p":1.0,
+        "r":1.0,
+        "f":1.0
       }
     },
-    "tok2vec_loss":29.5233667944,
-    "ner_loss":221.8769356638
+    "tok2vec_loss":419.190032584,
+    "ner_loss":53.5954064172
   }
 }

@@ -3,7 +3,7 @@ from app.spacy_model import nlp_ner
 import json
 from app.date import get_date
 from twilio.twiml.messaging_response import MessagingResponse
-from app.myfitnesspal_db import get_date_stats, initialize_db, get_NL_level
+from app.myfitnesspal_db import get_date_stats, initialize_db, get_NL_level, get_food_info
 from app.nutrientsInfo import get_more_info
 
 app = Flask(__name__)
@@ -36,7 +36,9 @@ def bot():
     """if the list is not empty check which entity is missing and save it to a list"""
     nutrient = ""
     insight = "overview"
+    volume = "TOP"
     more_info_requested = False
+    food_info_requested = False
     
     if ner_input:
         print(ner_input)
@@ -65,6 +67,22 @@ def bot():
             if ent.label_ == "MORE_INFO":
                 more_info_requested = True
 
+            if ent.label_ == "FOOD":
+                food_info_requested = True
+
+            if ent.label_ == "VOLUME":
+                volume = ent.text
+
+                volume_high_words = ["highest","top","high","maximum","max","most"]
+                volume_low_words = ["lowest","small","smallest","minimum","min", "impacted","least"]
+                volume_high = [i for i in volume_high_words if i in volume]
+                volume_low = [i for i in volume_low_words if i in volume]
+
+                if volume_high:
+                    volume = "TOP"
+                elif volume_low:
+                    volume = "LOW"
+
         if (not date_list):                 #if the user didn't specify for which date, show him info for today
             date = get_date("today")
             date_list.append(date) 
@@ -80,9 +98,7 @@ def bot():
         user_name = "evabot22"
         user_NL_level = get_NL_level(user_name)
 
-        # if the user requested additional information
-        #TODO: implement cases that the user asks for questions "Which food had the highest sugar today?"
-        if (more_info_requested):
+        if (more_info_requested):                               # if the user requested additional information
             more_info = get_more_info(nutrient_list)
             if (user_NL_level == 1):
                 msg = resp.message()
@@ -93,6 +109,21 @@ def bot():
             else:
                 msg = resp.message()
                 msg.body(more_info)
+        elif (food_info_requested):                            # if the user requested which food was high in protein for a particular day
+            food_info = get_food_info(user_name, date_list, nutrient_list, volume)
+            if (food_info == None):
+                msg = resp.message()
+                msg.body("There are no entries for the specified date. Try a different date")
+            else:
+                if (user_NL_level == 1):
+                    msg = resp.message()
+                    msg.body(food_info)
+                elif (user_NL_level == 2):
+                    msg = resp.message()
+                    msg.body(food_info)
+                else:
+                    msg = resp.message()
+                    msg.body(food_info)
         else:
             msg = resp.message()          
             msg.body("Let me check that for you...")
