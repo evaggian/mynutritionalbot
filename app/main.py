@@ -87,12 +87,30 @@ def bot():
             date = get_date("today")
             date_list.append(date) 
         
-        # quick fix in case the user types a synonym for carbs, change it in the nutrient_list to shoow the right nutrient
-        carbs_synonyms = ["carbohydrates","carbs"]
+        # fix in case the user types a synonym for some nutrient, change it in the nutrient_list to shoow the right nutrient
+        carbs_synonyms = ["carbohydrates","carbs","carbo"]
         for j in range(len(nutrient_list)):
             carbs = [i for i in carbs_synonyms if i in nutrient_list]
             if (carbs):
                 nutrient_list[j] = "carbohydrates"
+
+        protein_synonyms = ["protein","proteins","amino acids","prot"]
+        for j in range(len(nutrient_list)):
+            protein = [i for i in protein_synonyms if i in nutrient_list]
+            if (protein):
+                nutrient_list[j] = "protein"
+
+        fat_synonyms = ["fat","fats","fatty acids","trans"]
+        for j in range(len(nutrient_list)):
+            fat = [i for i in fat_synonyms if i in nutrient_list]
+            if (fat):
+                nutrient_list[j] = "fat"
+
+        sodium_synonyms = ["sodium","salt"]
+        for j in range(len(nutrient_list)):
+            sodium = [i for i in sodium_synonyms if i in nutrient_list]
+            if (sodium):
+                nutrient_list[j] = "sodium"
 
         #user_name = "evaggiab"
         user_name = "evabot22"
