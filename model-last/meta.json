@@ -24,6 +24,7 @@
       "COMPARE",
       "DATE",
       "FOOD",
+      "GREETING",
       "INSIGHT",
       "MORE_INFO",
       "NUTRIENT",
@@ -46,6 +47,11 @@
     "ents_p":1.0,
     "ents_r":1.0,
     "ents_per_type":{
+      "GREETING":{
+        "p":1.0,
+        "r":1.0,
+        "f":1.0
+      },
       "NUTRIENT":{
         "p":1.0,
         "r":1.0,
@@ -82,7 +88,7 @@
         "f":1.0
       }
     },
-    "tok2vec_loss":169.2898706201,
-    "ner_loss":27.0490509076
+    "tok2vec_loss":408.5826753267,
+    "ner_loss":57.7169159382
   }
 }

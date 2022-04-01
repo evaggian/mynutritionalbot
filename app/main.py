@@ -1,10 +1,12 @@
 from flask import Flask, request
 from app.spacy_model import nlp_ner
 import json
+import time
 from app.date import get_date
 from twilio.twiml.messaging_response import MessagingResponse
-from app.myfitnesspal_db import get_date_stats, initialize_db, get_NL_level, get_food_info
+from app.myfitnesspal_db import get_date_stats, get_food_info
 from app.nutrientsInfo import get_more_info
+from app.user_info_db import initialize_db, user_exists, first_time, get_user_first_name, get_NL_level
 
 app = Flask(__name__)
 
@@ -12,17 +14,42 @@ app = Flask(__name__)
 @app.route("/bot", methods=["POST"])
 def bot():
 
-    initialize_db()
-
-    #TODO: initiate conversation and ask for the user's name
-    #TODO: ask for the user's name on MFP as well
-
     """ instantiate lists """
     ner_input = []  # empty list
     
     """ get the response of the bot"""
     resp = MessagingResponse()
     responded = False # set the bot response to false
+
+    initialize_db()
+
+    # check if the user exists in the db based on the phone_number taken from Twilio
+    user_name = user_exists(request.values.get('From')[-13:])
+    if not user_name:
+        msg = resp.message()
+        msg.body("Sorry! You haven't signed up for this experiment.")
+        responded = True
+        return str(resp)
+
+    first_time_user = first_time(user_name)
+    user_first_name = get_user_first_name(user_name)
+
+    if first_time_user:
+        msg = resp.message()
+        msg.body("Hello " + user_first_name)
+        time.sleep(5.0)
+
+        msg = resp.message()
+        msg.body("I am Avobot, your personal nutritionist")
+
+        msg = resp.message()
+        msg.body("I can help understand your nutrition stats from MyFitnessPal better and provide you with additional information.")
+
+        msg = resp.message()
+        msg.body("How can I help you today? ")
+
+        responded = True
+        return str(resp)
 
     """get the message of the user"""
     incoming_msg = request.values.get("Body", "").lower()  # inp
@@ -45,6 +72,15 @@ def bot():
         date_list = []
         nutrient_list = []
         for ent in spacy_res.ents:
+            if ent.label_ == "GREETING":
+                msg = resp.message()
+                msg.body("Hi " + user_first_name)
+
+                msg = resp.message()
+                msg.body("How can I help you today? ")
+
+                responded = True
+                return str(resp)
             if ent.label_ == "DATE":            # take the user's input of date and convert it to a datetime obj.
                 date = get_date(ent.text)
                 date_list.append(date)          # add it to a list, if the user inputs multiple dates-> intends to compare
@@ -112,8 +148,6 @@ def bot():
             if (sodium):
                 nutrient_list[j] = "sodium"
 
-        #user_name = "evaggiab"
-        user_name = "evabot22"
         user_NL_level = get_NL_level(user_name)
 
         if (more_info_requested):                               # if the user requested additional information
