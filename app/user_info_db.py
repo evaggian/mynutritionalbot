@@ -109,6 +109,7 @@ def get_user_first_name(user_name):
         mycursor = mychatbot_db.cursor()
         mycursor.execute("SELECT first_name from `heroku_5f2973cbf7c2b89`.`users` where username = %s", (user_name,))
         record = mycursor.fetchone()
+        print(record)
 
         return record[0]
 

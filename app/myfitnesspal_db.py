@@ -1,5 +1,7 @@
+from multiprocessing.connection import Client
 import myfitnesspal
-from datetime import timedelta
+from datetime import datetime, timedelta
+from collections import defaultdict
 
 client = myfitnesspal.Client('evaggiab', password="myChatbot2022")
 
@@ -52,7 +54,6 @@ def get_food_info(user_name, date_input, nutrient_list, volume):
 
     if len(date_input) == 1:
         friend_current_stats = client.get_date(date_input[0].year, date_input[0].month, date_input[0].day, username=user_name)
-
         if volume == "TOP":
             for nutrient in nutrient_list:
                 meals = friend_current_stats.meals
@@ -104,7 +105,25 @@ def get_date_stats(user_name, date_input, insight):
         if len(date_input) == 1:
             friend_current_stats = client.get_date(date_input[0].year, date_input[0].month, date_input[0].day, username=user_name)
             remainder_stats = calculate_remainder(friend_current_stats.totals, friend_current_stats.goals)
-            return remainder_stats
+
+            if not friend_current_stats.totals:     # if this date's entry is empty, create a dic with 0 values
+                totals = {'calories': 0, 'carbohydrates': 0, 'fat': 0, 'protein': 0, 'sodium': 0, 'sugar': 0}
+
+                stats = defaultdict(list)       # create a dic combining dics from totals, goals and remainder
+
+                for stat in (totals, friend_current_stats.goals, remainder_stats):
+                    for key, value in stat.items():
+                        stats[key].append(value)
+
+            else:                           # if this date's entry has values
+                stats = defaultdict(list)   # create a dic combining dics from totals, goals and remainder
+
+                for stat in (friend_current_stats.totals, friend_current_stats.goals, remainder_stats):
+                    for key, value in stat.items():
+                        stats[key].append(value) 
+    
+            print(stats)
+            return stats
 
         # if it is a comparison between dates
         else:
@@ -149,11 +168,14 @@ def get_date_stats(user_name, date_input, insight):
             # calculate average remainder
             avg_remainder = calculate_remainder(avg_totals, avg_goals)     
 
-            print(avg_totals)
-            print(avg_goals)
-            print(avg_remainder)
+            stats = defaultdict(list)   # create a dic combining dics from totals, goals and remainder
 
-            return avg_remainder
+            for stat in (avg_totals, avg_goals, avg_remainder):
+                for key, value in stat.items():
+                    stats[key].append(value) 
+
+            print(stats)
+            return stats
 
     else:
         print("There is no 'insight' attribute specified")

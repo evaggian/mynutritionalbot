@@ -7,6 +7,7 @@ from twilio.twiml.messaging_response import MessagingResponse
 from app.myfitnesspal_db import get_date_stats, get_food_info
 from app.nutrientsInfo import get_more_info
 from app.user_info_db import initialize_db, user_exists, first_time, get_user_first_name, get_NL_level
+from app.nlg import inform_overview
 
 app = Flask(__name__)
 
@@ -25,6 +26,8 @@ def bot():
 
     # check if the user exists in the db based on the phone_number taken from Twilio
     user_name = user_exists(request.values.get('From')[-13:])
+    #user_name = "evaggiab"         #enable this only for testing of NL_level 3
+
     if not user_name:
         msg = resp.message()
         msg.body("Sorry! You haven't signed up for this experiment.")
@@ -34,6 +37,7 @@ def bot():
     first_time_user = first_time(user_name)
     user_first_name = get_user_first_name(user_name)
 
+    # check if it is the first interaction of the user with the chatbot and give some self-description of the chatbot
     if first_time_user:
         msg = resp.message()
         msg.body("Hello " + user_first_name)
@@ -48,19 +52,16 @@ def bot():
         msg = resp.message()
         msg.body("How can I help you today? ")
 
-        responded = True
-        return str(resp)
-
-    """get the message of the user"""
+    # get the message of the user
     incoming_msg = request.values.get("Body", "").lower()  # inp
     spacy_res = nlp_ner(incoming_msg)  # process the input with spacy
 
-    """extract entities from the spacy obj and append to empty list"""
+    # extract entities from the spacy obj and append to empty list
     for ent in spacy_res.ents:
         ner_input.append(ent.label_)
         print(ent.text, ent.label_)
 
-    """if the list is not empty check which entity is missing and save it to a list"""
+    # if the list is not empty check which entity is missing and save it to a list
     nutrient = ""
     insight = "overview"
     volume = "TOP"
@@ -72,7 +73,7 @@ def bot():
         date_list = []
         nutrient_list = []
         for ent in spacy_res.ents:
-            if ent.label_ == "GREETING":
+            if ent.label_ == "GREETING":      # if the user greets the chatbot and they have interacted before 
                 msg = resp.message()
                 msg.body("Hi " + user_first_name)
 
@@ -100,13 +101,13 @@ def bot():
                 elif compare:
                     insight = "compare"
 
-            if ent.label_ == "MORE_INFO":
+            if ent.label_ == "MORE_INFO":      # if the user asked for more information
                 more_info_requested = True
 
-            if ent.label_ == "FOOD":
+            if ent.label_ == "FOOD":           # if the user asked for extra information about his food intake
                 food_info_requested = True
 
-            if ent.label_ == "VOLUME":
+            if ent.label_ == "VOLUME":         # and if the user specified if he wants to know about his top food or lowest food
                 volume = ent.text
 
                 volume_high_words = ["highest","top","high","maximum","max","most"]
@@ -123,7 +124,7 @@ def bot():
             date = get_date("today")
             date_list.append(date) 
         
-        # fix in case the user types a synonym for some nutrient, change it in the nutrient_list to shoow the right nutrient
+        # fix in case the user types a synonym for some nutrient, change it in the nutrient_list to show the right nutrient
         carbs_synonyms = ["carbohydrates","carbs","carbo"]
         for j in range(len(nutrient_list)):
             carbs = [i for i in carbs_synonyms if i in nutrient_list]
@@ -179,10 +180,11 @@ def bot():
         else:
             msg = resp.message()          
             msg.body("Let me check that for you...")
-            user_date_stats = get_date_stats(user_name ,date_list ,insight)
-            #print(user_nutrient_stats)
+            
+            text = inform_overview(nutrient_list, date_list ,insight, user_NL_level, user_name, user_first_name)
+            print(text)
   
-            if (user_NL_level == 1):
+            """ if (user_NL_level == 1):
                 msg = resp.message()
                 msg.body("You are doing great! 😁")
 
@@ -190,7 +192,6 @@ def bot():
                 text = "\n"
 
                 print(nutrient_list)
-
                 if (len(nutrient_list) > 0):
                     for i in range(len(nutrient_list)):
                         if (nutrient_list[i] == 'protein'):
@@ -211,23 +212,21 @@ def bot():
                     text = text + "Fat: " + str(user_date_stats["fat"]) + "\n" 
                     text = text + "Sugar: " + str(user_date_stats["sugar"]) + "\n" 
                     text = text + "Sodium: " + str(user_date_stats["sodium"]) + "\n" 
-                    text = text + "Calories: " + str(user_date_stats["calories"])
+                    text = text + "Calories: " + str(user_date_stats["calories"]) """
 
+            msg = resp.message()
+            msg.body(text)
 
-                msg.body(text)
+            """    #msg.media("https://picsum.photos/200/300")
 
-                #msg.media("https://picsum.photos/200/300")
-
-            elif (user_NL_level == 2):
+             elif (user_NL_level == 2):
                 msg = resp.message()
                 msg.body("medium level" + json.dumps(user_date_stats))
             else :
                 msg = resp.message()
                 msg.body("high level" + json.dumps(user_date_stats))
-                msg.media("https://demo.twilio.com/owl.png")
+                msg.media("https://demo.twilio.com/owl.png") """
 
-        msg = resp.message()
-        msg.body("Is everything clear to you?")
         responded = True
     if not responded:
         msg.body("I don't quite understand that. Can you repeat it please?")
