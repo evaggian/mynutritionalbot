@@ -181,7 +181,7 @@ def bot():
             msg = resp.message()          
             msg.body("Let me check that for you...")
             
-            text = inform_overview(nutrient_list, date_list ,insight, user_NL_level, user_name, user_first_name)
+            text = inform_overview(nutrient_list, date_list ,insight, 3, user_name, user_first_name)
             print(text)
   
             """ if (user_NL_level == 1):

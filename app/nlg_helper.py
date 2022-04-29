@@ -1,3 +1,5 @@
+import random 
+
 def compute_percentage(nutrient_stats):         # compute the percentage of a nutrient between current value and target and round it up
     print(nutrient_stats[0])
     return round(((int(nutrient_stats[0])*100)/int(nutrient_stats[1])) - 100)
@@ -20,14 +22,40 @@ def get_calories(calories_dic, user_NL_level):  # compute calorie percentage and
 
     return text
 
-def get_nutr_1(user_date_stats):
-    return ""
+def get_good_nutr(user_date_stats):         # take the dic with the nutrients, remove the 'calories', sort it by percentage               
+    new_stats_dic = dict(user_date_stats)   # and return the top 2 good nutrients
+    del new_stats_dic["calories"]
+    
+    for key in new_stats_dic.items():
+        percentage = compute_percentage(new_stats_dic[key[0]])
+        new_stats_dic[key[0]].append(percentage)
 
-def get_nutr_2(user_date_stats):
-    return ""
+    good_nutr = dict(sorted(new_stats_dic.items(), key=lambda r: r[1][2], reverse = True)[:2])
 
-def get_bad_nutr_1(user_date_stats):
-    return ""
+    return good_nutr
 
-def get_bad_nutr_2(User_date_stats):
-    return ""
+def get_bad_nutr(user_date_stats):          # take the dic with the nutrients, remove the 'calories', sort it by percentage
+    new_stats_dic = dict(user_date_stats)   # and return the top 2 bad nutrients
+    del new_stats_dic["calories"]
+    
+    for key in new_stats_dic.items():
+        percentage = compute_percentage(new_stats_dic[key[0]])
+        new_stats_dic[key[0]].append(percentage)
+
+    bad_nutr = dict(sorted(new_stats_dic.items(), key=lambda r: r[1][2]) [:2])
+    print(bad_nutr)
+
+    return bad_nutr
+
+
+def get_food_examples(nutrient):
+    if nutrient == 'carbohydrates':
+        return random.choice([("bread" , "rice" , "pasta", "potatoes", "cereals")])
+    elif nutrient == 'protein':
+        return random.choice(["vegetables like tomatoes, broccoli, leafy greens", "fruits like apples, bananas, pears, peaches", "grains like rice, oats, rice, pasta"])
+    elif nutrient == 'fat':
+        return random.choice(["processed food", "oil", "margarine", "cheese", "sausage", "biscuits, cakes, and pastries"])
+    elif nutrient == 'sodium':
+        return random.choice(["ready-made food", "sausages", "salt", "potato chips", "frozen pizzas", "canned food", "fast food"])
+    elif nutrient == 'sugar':
+        return random.choice(["ready-made products", "salad dressings", "sweet drinks such as soft drinks", "sweets and pastries"])
