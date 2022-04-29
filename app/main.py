@@ -1,12 +1,11 @@
 from flask import Flask, request
 from app.spacy_model import nlp_ner
-import json
 import time
 from app.date import get_date
 from twilio.twiml.messaging_response import MessagingResponse
-from app.myfitnesspal_db import get_date_stats, get_food_info
-from app.nutrientsInfo import get_more_info
-from app.user_info_db import initialize_db, user_exists, first_time, get_user_first_name, get_NL_level
+from app.myfitnesspal_db import get_food_info
+from app.nlp_nutrientsInfo import get_more_info
+from app.user_info_db import *
 from app.nlg import inform_overview
 
 app = Flask(__name__)
@@ -152,16 +151,11 @@ def bot():
         user_NL_level = get_NL_level(user_name)
 
         if (more_info_requested):                               # if the user requested additional information
-            more_info = get_more_info(nutrient_list)
-            if (user_NL_level == 1):
-                msg = resp.message()
-                msg.body(more_info)
-            elif (user_NL_level == 2):
-                msg = resp.message()
-                msg.body(more_info)
-            else:
-                msg = resp.message()
-                msg.body(more_info)
+            text = get_more_info(nutrient_list, user_NL_level)
+            print(text)
+
+            msg = resp.message()
+            msg.body(text)
         elif (food_info_requested):                            # if the user requested which food was high in protein for a particular day
             food_info = get_food_info(user_name, date_list, nutrient_list, volume)
             if (food_info == None):
@@ -181,51 +175,11 @@ def bot():
             msg = resp.message()          
             msg.body("Let me check that for you...")
             
-            text = inform_overview(nutrient_list, date_list ,insight, 3, user_name, user_first_name)
+            text = inform_overview(nutrient_list, date_list ,insight, user_NL_level, user_name, user_first_name)
             print(text)
   
-            """ if (user_NL_level == 1):
-                msg = resp.message()
-                msg.body("You are doing great! 😁")
-
-                msg = resp.message()
-                text = "\n"
-
-                print(nutrient_list)
-                if (len(nutrient_list) > 0):
-                    for i in range(len(nutrient_list)):
-                        if (nutrient_list[i] == 'protein'):
-                            text = text + "Protein: " + str(user_date_stats[nutrient_list[i]]) +"\n"
-                        elif (nutrient_list[i] == 'carbohydrates'):
-                            text = text + "Carbs: " + str(user_date_stats[nutrient_list[i]]) +"\n"
-                        elif (nutrient_list[i] == 'fat'):
-                            text = text + "Fat: " + str(user_date_stats[nutrient_list[i]]) +"\n"
-                        elif (nutrient_list[i] == 'sugar'):
-                            text = text + "Sugar: " + str(user_date_stats[nutrient_list[i]]) +"\n"
-                        elif (nutrient_list[i] == 'sodium'):
-                            text = text + "Sodium: " + str(user_date_stats[nutrient_list[i]]) +"\n"
-                        elif (nutrient_list[i] == 'calories'):
-                            text = text + "Calories: " + str(user_date_stats[nutrient_list[i]]) +"\n"
-                else:
-                    text = text + "Protein: " + str(user_date_stats["protein"]) + "\n" 
-                    text = text + "Carbs: " + str(user_date_stats["carbohydrates"]) + "\n" 
-                    text = text + "Fat: " + str(user_date_stats["fat"]) + "\n" 
-                    text = text + "Sugar: " + str(user_date_stats["sugar"]) + "\n" 
-                    text = text + "Sodium: " + str(user_date_stats["sodium"]) + "\n" 
-                    text = text + "Calories: " + str(user_date_stats["calories"]) """
-
             msg = resp.message()
             msg.body(text)
-
-            """    #msg.media("https://picsum.photos/200/300")
-
-             elif (user_NL_level == 2):
-                msg = resp.message()
-                msg.body("medium level" + json.dumps(user_date_stats))
-            else :
-                msg = resp.message()
-                msg.body("high level" + json.dumps(user_date_stats))
-                msg.media("https://demo.twilio.com/owl.png") """
 
         responded = True
     if not responded:
