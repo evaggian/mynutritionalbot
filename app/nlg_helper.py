@@ -1,4 +1,6 @@
-import random 
+import random
+
+from sympy import re 
 
 def compute_percentage(nutrient_stats):         # compute the percentage of a nutrient between current value and target and round it up
     print(nutrient_stats[0])
@@ -59,3 +61,21 @@ def get_food_examples(nutrient):
         return random.choice(["ready-made food", "sausages", "salt", "potato chips", "frozen pizzas", "canned food", "fast food"])
     elif nutrient == 'sugar':
         return random.choice(["ready-made products", "salad dressings", "sweet drinks such as soft drinks", "sweets and pastries"])
+
+def get_volume_adjective(volume_input):
+    if volume_input == "TOP":
+        return " highest "
+    else:
+        return " lowest "
+
+def get_volume_adjective_reverse(volume_input):
+    if volume_input == "TOP":
+        return " less "
+    else:
+        return " more "
+
+def get_grams(nutrient):
+    if nutrient == 'sodium':
+        return " mg"
+    else:
+        return " g"

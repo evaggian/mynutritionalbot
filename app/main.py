@@ -6,7 +6,7 @@ from twilio.twiml.messaging_response import MessagingResponse
 from app.myfitnesspal_db import get_food_info
 from app.nlp_nutrientsInfo import get_more_info
 from app.user_info_db import *
-from app.nlg import inform_overview
+from app.nlg import *
 
 app = Flask(__name__)
 
@@ -150,32 +150,27 @@ def bot():
 
         user_NL_level = get_NL_level(user_name)
 
-        if (more_info_requested):                               # if the user requested additional information
+        if (more_info_requested):                               # scenario D - inform extra food info
             text = get_more_info(nutrient_list, user_NL_level)
             print(text)
 
             msg = resp.message()
             msg.body(text)
-        elif (food_info_requested):                            # if the user requested which food was high in protein for a particular day
+        elif (food_info_requested):                            # scenario C - inform food consumption
             food_info = get_food_info(user_name, date_list, nutrient_list, volume)
-            if (food_info == None):
-                msg = resp.message()
-                msg.body("There are no entries for the specified date. Try a different date")
-            else:
-                if (user_NL_level == 1):
-                    msg = resp.message()
-                    msg.body(food_info)
-                elif (user_NL_level == 2):
-                    msg = resp.message()
-                    msg.body(food_info)
-                else:
-                    msg = resp.message()
-                    msg.body(food_info)
-        else:
+            print(food_info)
+            text = get_food_info_nlg(food_info, 3, nutrient_list, volume)
+
+            print(text)
+  
+            msg = resp.message()
+            msg.body(text)
+
+        else:               
             msg = resp.message()          
-            msg.body("Let me check that for you...")
+            msg.body("Let me check that for you...")           # scenario A - inform overview
             
-            text = inform_overview(nutrient_list, date_list ,insight, user_NL_level, user_name, user_first_name)
+            text = inform_overview( date_list ,insight, user_NL_level, user_name, user_first_name)
             print(text)
   
             msg = resp.message()

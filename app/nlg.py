@@ -1,8 +1,10 @@
 import random
+
+from matplotlib.transforms import Bbox
 from app.myfitnesspal_db import *
 from app.nlg_helper import *
 
-def inform_overview(nutrient_list, date_list ,insight, user_NL_level, user_name, user_first_name):
+def inform_overview( date_list ,insight, user_NL_level, user_name, user_first_name):
 
     user_date_stats = get_date_stats(user_name ,date_list ,insight)
 
@@ -95,4 +97,72 @@ def inform_overview(nutrient_list, date_list ,insight, user_NL_level, user_name,
         + str(bad_nutr[list(bad_nutr.keys())[0]][2]) + " and " \
         + str(bad_nutr[list(bad_nutr.keys())[1]][2]) + " of them, and it will not help you achieve your goal.\n\nWould you like to ask something more?"
 
-        return random.choice([scenario_2])
+        return random.choice([scenario_1, scenario_2])
+
+
+def get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input):
+    print(food_info)
+    print(list( food_info.values())[0])
+    if user_NL_level == 1:
+        scenario_1 = "Of the foods you ate, " \
+        + list(food_info.keys())[0] + " was the " \
+        + get_volume_adjective(volume_input) \
+        + "in " \
+        + nutrient_list[0] \
+        + ". Why don't you substitute it with " \
+        + get_volume_adjective_reverse(volume_input) \
+        + get_food_examples(nutrient_list[0]) \
+        + "?"
+
+        scenario_2 = list(food_info.keys())[0] + "." \
+        + " I know that changing what you eat is hard but consider your goal. You could try eating something with" \
+        + get_volume_adjective_reverse(volume_input) \
+        + nutrient_list[0] \
+        + " next time, such as " \
+        + get_food_examples(nutrient_list[0]) \
+        + "."
+
+        return random.choice([scenario_1, scenario_2])
+
+    elif user_NL_level == 2:
+        scenario_1 = "Of the foods you ate, " \
+        + list(food_info.keys())[0] \
+        + " had the " \
+        + get_volume_adjective(volume_input) \
+        + nutrient_list[0] \
+        + " (" \
+        + str(list( food_info.values())[0]) + get_grams(nutrient_list[0]) \
+        + "). Why don't you substitute it with" \
+        + get_volume_adjective_reverse(volume_input) \
+        + "of " \
+        + "$nutr_1_group."
+
+        scenario_2 = list(food_info.keys())[0] \
+        + " with " \
+        + str(list( food_info.values())[0]) + get_grams(nutrient_list[0]) \
+        + " of " \
+        + nutrient_list[0] \
+        + ". I know that changing what you eat is hard but consider your goal. You could try shifting your balance to eating " \
+        + get_volume_adjective_reverse(volume_input) \
+        + "$nutr_1_group."
+
+        return random.choice([scenario_1, scenario_2])
+
+    elif user_NL_level == 3: 
+        scenario_1 = "Of the foods you ate, " \
+        + list(food_info.keys())[0] \
+        + " was the " \
+        + get_volume_adjective(volume_input) \
+        + "in " \
+        + nutrient_list[0] \
+        + " with " \
+        + str(list( food_info.values())[0]) + get_grams(nutrient_list[0]) + "."
+
+        scenario_2 = list(food_info.keys())[0] \
+        + " with " \
+        + str(list( food_info.values())[0]) + get_grams(nutrient_list[0]) \
+        + " of " \
+        + nutrient_list[0] \
+        + ". I know that changing what you eat is hard but consider your goal."
+
+        return scenario_2
