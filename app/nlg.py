@@ -1,19 +1,21 @@
 import random
 
-from matplotlib.transforms import Bbox
 from app.myfitnesspal_db import *
 from app.nlg_helper import *
 
-def inform_overview( date_list ,insight, user_NL_level, user_name, user_first_name):
+def inform_overview(nutrient_list, date_list , insight, user_NL_level, user_name, user_first_name):
 
-    user_date_stats = get_date_stats(user_name ,date_list ,insight)
+    user_date_stats = get_date_stats(user_name ,date_list ,insight)     # retrieve all stats of the requuested date
 
-    good_nutr = get_good_nutr(user_date_stats)
-    bad_nutr = get_bad_nutr(user_date_stats)
+    if not nutrient_list:
+        return get_overview_text(user_NL_level, user_first_name, user_date_stats)   # return nlg text - overview
+    else:
+        return get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats)  # return nlg text - specific nutrient
 
-    #print(good_nutr)
-    #print("here: " , type(list(good_nutr.keys())[0]))
-    #print(list(good_nutr.keys())[0])
+def get_overview_text(user_NL_level, user_first_name, user_date_stats):
+
+    good_nutr = get_good_nutr(user_date_stats)      # retrieve top 2 nutrient data that have positive values
+    bad_nutr = get_bad_nutr(user_date_stats)        # retrieve top 2 nutrient data that have negative values
 
     if user_NL_level == 1:
         scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 1) + "\n" \
@@ -100,7 +102,115 @@ def inform_overview( date_list ,insight, user_NL_level, user_name, user_first_na
         return random.choice([scenario_1, scenario_2])
 
 
-def get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input):
+def get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats):
+
+    good_stats = True                   # if the value is positive give positive feadback
+    for nutrient in nutrient_list:
+        if user_date_stats[nutrient][2] <= 0: # if the value is positive give negative feadback
+            good_stats = False
+
+    if good_stats:
+        if user_NL_level == 1:
+            scenario_1 = "Your " \
+            + nutrient_list[0] + " intake was kept on a good level. Keep up the good work 💪\n\n" \
+            + "Want to know something else?"
+
+            scenario_2 = "It looks good. Keep it up 😀\n\n" \
+            + "Anything else I can help with?"
+
+            return random.choice([scenario_1, scenario_2])
+
+        elif user_NL_level == 2:
+            scenario_1 = "Your " + nutrient_list[0] + " intake was " \
+            + str(user_date_stats[nutrient_list[0]][0]) \
+            + " out of " + str(user_date_stats[nutrient_list[0]][1]) \
+            + " which is below your target. Perhaps you could consider eating more" \
+            + " food_group_1 " \
+            + "for a healthy diet?\n\n" \
+            + "Want to know something else?"
+
+            scenario_2 = "It looks good. Keep it up 😀\n\n" \
+            + "Anything else I can help with?"
+
+            return random.choice([scenario_1, scenario_2])
+
+        elif user_NL_level == 3:
+            scenario_1 = "Your " \
+            + nutrient_list[0] \
+            + " intake was " \
+            + str(user_date_stats[nutrient_list[0]][0]) \
+            + " out of " \
+            + str(user_date_stats[nutrient_list[0]][1]) \
+            + get_grams(nutrient_list[0]) \
+            + ". That's good. Keep up the good work 💪" 
+
+            scenario_2 = str(user_date_stats[nutrient_list[0]][0]) \
+            + "/" \
+            + str(user_date_stats[nutrient_list[0]][1]) \
+            + get_grams(nutrient_list[0]) + "\n\n" \
+            + "Looks good! Keep it up 😀\n\n" \
+            + "Anything else I can help with?"
+
+            return random.choice([scenario_1, scenario_2])
+        
+    else:
+        if user_NL_level == 1:
+            scenario_1 = "Your " \
+            + nutrient_list[0] \
+            + " intake needs some improvement. Perhaps you could consider eating less " \
+            + get_food_examples(nutrient_list[0]) + "?!\n\n" \
+            + "Want to know something else?"
+
+            scenario_2 = "Hmm, it seems that you have been eating a lot of " \
+            + nutrient_list[0] \
+            + " 😬. It would be better to reduce it.\n\n" \
+            + "Anything else I can help with?"
+
+            return random.choice([scenario_1, scenario_2])
+
+        elif user_NL_level == 2:
+            scenario_1 = "Your " + nutrient_list[0] + " intake was " \
+            + str(user_date_stats[nutrient_list[0]][0]) \
+            + " out of " + str(user_date_stats[nutrient_list[0]][1]) \
+            + get_grams(nutrient_list[0]) \
+            + " which is above your target. Perhaps you could consider eating less" \
+            + " food_group_1 " \
+            + "for a healthy diet?\n\n" \
+            + "Want to know something else?"
+
+            scenario_2 = "Hmm, it seems that you have been eating a lot of " \
+            + nutrient_list[0] \
+            + "(" \
+            + str(user_date_stats[nutrient_list[0]][0]) + "/" \
+            + str(user_date_stats[nutrient_list[0]][1]) \
+            + get_grams(nutrient_list[0]) + ")" \
+            + " 😬. It would be better to reduce it.\n\n" \
+            + "Anything else I can help with?"
+
+            return random.choice([scenario_1, scenario_2])
+
+        elif user_NL_level == 3:
+            scenario_1 = "Your " \
+            + nutrient_list[0] \
+            + " intake was " \
+            + str(user_date_stats[nutrient_list[0]][0]) \
+            + " out of " \
+            + str(user_date_stats[nutrient_list[0]][1]) \
+            + get_grams(nutrient_list[0]) \
+            + ". It seems that this needs a bit of improvement to reach your goal." 
+
+            scenario_2 = "Hmm, it seems that you have been eating " \
+            + str(user_date_stats[nutrient_list[0]][0]) \
+            + " of " + str(user_date_stats[nutrient_list[0]][1]) \
+            + get_grams(nutrient_list[0]) \
+            + "😬. It would be better to reduce it by " \
+            + get_percentage(user_date_stats[nutrient_list[0]][0], user_date_stats[nutrient_list[0]][1]) + "%.\n\n""" \
+            + "Anything else I can help with?"
+
+            return random.choice([scenario_1, scenario_2])
+
+
+def get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input):   # return nlg text about top/lowest food requested
     print(food_info)
     print(list( food_info.values())[0])
     if user_NL_level == 1:

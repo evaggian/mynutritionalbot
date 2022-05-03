@@ -1,7 +1,5 @@
 import random
 
-from sympy import re 
-
 def compute_percentage(nutrient_stats):         # compute the percentage of a nutrient between current value and target and round it up
     print(nutrient_stats[0])
     return round(((int(nutrient_stats[0])*100)/int(nutrient_stats[1])) - 100)
@@ -76,6 +74,10 @@ def get_volume_adjective_reverse(volume_input):
 
 def get_grams(nutrient):
     if nutrient == 'sodium':
-        return " mg"
+        return " mgrams"
     else:
-        return " g"
+        return " grams"
+
+
+def get_percentage(current, target):
+    return str(round(current*100/target - 100))

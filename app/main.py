@@ -159,7 +159,7 @@ def bot():
         elif (food_info_requested):                            # scenario C - inform food consumption
             food_info = get_food_info(user_name, date_list, nutrient_list, volume)
             print(food_info)
-            text = get_food_info_nlg(food_info, 3, nutrient_list, volume)
+            text = get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume)
 
             print(text)
   
@@ -168,9 +168,9 @@ def bot():
 
         else:               
             msg = resp.message()          
-            msg.body("Let me check that for you...")           # scenario A - inform overview
+            msg.body("Let me check that for you...")           # scenario A & B - inform overview, inform specific nutrient stats
             
-            text = inform_overview( date_list ,insight, user_NL_level, user_name, user_first_name)
+            text = inform_overview(nutrient_list, date_list ,insight, user_NL_level, user_name, user_first_name)
             print(text)
   
             msg = resp.message()
