@@ -1,6 +1,5 @@
 from flask import Flask, request
 from app.spacy_model import nlp_ner
-import time
 from app.date import get_date
 from twilio.twiml.messaging_response import MessagingResponse
 from app.myfitnesspal_db import get_food_info
@@ -38,18 +37,10 @@ def bot():
 
     # check if it is the first interaction of the user with the chatbot and give some self-description of the chatbot
     if first_time_user:
-        msg = resp.message()
-        msg.body("Hello " + user_first_name)
-        time.sleep(5.0)
 
+        text = get_first_time_user_text(user_first_name)
         msg = resp.message()
-        msg.body("I am Avobot, your personal nutritionist")
-
-        msg = resp.message()
-        msg.body("I can help understand your nutrition stats from MyFitnessPal better and provide you with additional information.")
-
-        msg = resp.message()
-        msg.body("How can I help you today? ")
+        msg.body(text)
 
     # get the message of the user
     incoming_msg = request.values.get("Body", "").lower()  # inp
@@ -72,12 +63,16 @@ def bot():
         date_list = []
         nutrient_list = []
         for ent in spacy_res.ents:
-            if ent.label_ == "GREETING":      # if the user greets the chatbot and they have interacted before 
-                msg = resp.message()
-                msg.body("Hi " + user_first_name)
+            if ent.label_ == "GREETING":      # if the user greets the chatbot and they have interacted before
+
+                scenario_1 = "Hi " + user_first_name + "!\n\n" \
+                + "How can I help you today?"
+
+                scenario_2 = "Hi there 👋🏼\n\n" \
+                + "What do you want to know today?"
 
                 msg = resp.message()
-                msg.body("How can I help you today? ")
+                msg.body(random.choice([scenario_1, scenario_2]))
 
                 responded = True
                 return str(resp)

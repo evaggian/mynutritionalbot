@@ -276,3 +276,14 @@ def get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input):   
         + ". I know that changing what you eat is hard but consider your goal."
 
         return scenario_2
+
+
+def get_first_time_user_text(user_first_name):
+    text = "Hello " + user_first_name + "!\n\n" \
+    + "I am Avobot, a bot 🤖 trapped in the body of an avocado 🥑.\n\n" \
+    + "I will be your personal nutritionist and can help you understand your nutrition stats from MyFitnessPal better.\n\n" \
+    + "I can also provide you with additional information.\n\n" \
+    + "For example, you can ask me, “How many calories did I eat last week?” or “Why do I need protein?”. Cool right?!\n\n" \
+    + "So, how can I help you today?"
+
+    return text
