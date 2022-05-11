@@ -35,13 +35,6 @@ def bot():
     first_time_user = first_time(user_name)
     user_first_name = get_user_first_name(user_name)
 
-    # check if it is the first interaction of the user with the chatbot and give some self-description of the chatbot
-    if first_time_user:
-
-        text = get_first_time_user_text(user_first_name)
-        msg = resp.message()
-        msg.body(text)
-
     # get the message of the user
     incoming_msg = request.values.get("Body", "").lower()  # inp
     spacy_res = nlp_ner(incoming_msg)  # process the input with spacy
@@ -65,14 +58,22 @@ def bot():
         for ent in spacy_res.ents:
             if ent.label_ == "GREETING":      # if the user greets the chatbot and they have interacted before
 
-                scenario_1 = "Hi " + user_first_name + "!\n\n" \
-                + "How can I help you today?"
+                # check if it is the first interaction of the user with the chatbot and give some self-description of the chatbot
+                if first_time_user:
+                    print("user_first_name: ", user_first_name)
+                    text = get_first_time_user_text(user_first_name)
+                    msg = resp.message()
+                    msg.body(text)
 
-                scenario_2 = "Hi there 👋🏼\n\n" \
-                + "What do you want to know today?"
+                else:
+                    scenario_1 = "Hi " + user_first_name + "!\n\n" \
+                    + "How can I help you today?"
 
-                msg = resp.message()
-                msg.body(random.choice([scenario_1, scenario_2]))
+                    scenario_2 = "Hi there 👋🏼\n\n" \
+                    + "What do you want to know today?"
+
+                    msg = resp.message()
+                    msg.body(random.choice([scenario_1, scenario_2]))
 
                 responded = True
                 return str(resp)

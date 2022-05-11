@@ -1,8 +1,10 @@
 import random
 
 def compute_percentage(nutrient_stats):         # compute the percentage of a nutrient between current value and target and round it up
-    print(nutrient_stats[0])
-    return round(((int(nutrient_stats[0])*100)/int(nutrient_stats[1])) - 100)
+    if not nutrient_stats:                      # if there is no entry, it is empty
+        return -100
+    else:
+        return round(((int(nutrient_stats[0])*100)/int(nutrient_stats[1])) - 100)
 
 def get_calories(calories_dic, user_NL_level):  # compute calorie percentage and return the text based on the NL_level
 
@@ -22,33 +24,40 @@ def get_calories(calories_dic, user_NL_level):  # compute calorie percentage and
 
     return text
 
-def get_good_nutr(user_date_stats):         # take the dic with the nutrients, remove the 'calories', sort it by percentage               
-    new_stats_dic = dict(user_date_stats)   # and return the top 2 good nutrients
-    del new_stats_dic["calories"]
+def get_good_nutr(user_date_stats):         # find and return the to 2 good nutrients
+    if (user_date_stats["calories"][1] == user_date_stats["calories"][2]):  # if there were no entries for the date requested
+        print("0 entries")
+        return 0
+
+    new_stats_dic = dict(user_date_stats)   # take the dict with the nutrient
+    del new_stats_dic["calories"]           # remove the 'calories'
     
     for key in new_stats_dic.items():
-        percentage = compute_percentage(new_stats_dic[key[0]])
+        percentage = compute_percentage(new_stats_dic[key[0]])  # sort it by percentage               
         new_stats_dic[key[0]].append(percentage)
 
-    good_nutr = dict(sorted(new_stats_dic.items(), key=lambda r: r[1][2], reverse = True)[:2])
+    good_nutr = dict(sorted(new_stats_dic.items(), key=lambda r: r[1][2], reverse = True)[:2])  # and return the top 2 good nutrients
 
     return good_nutr
 
-def get_bad_nutr(user_date_stats):          # take the dic with the nutrients, remove the 'calories', sort it by percentage
-    new_stats_dic = dict(user_date_stats)   # and return the top 2 bad nutrients
-    del new_stats_dic["calories"]
+def get_bad_nutr(user_date_stats):          # find and return the to 2 bad nutrients
+    if (user_date_stats["calories"][1] == user_date_stats["calories"][2]):  # if there were no entries for the date requested
+        print("0 entries")
+        return 0
+    
+    new_stats_dic = dict(user_date_stats)   # take the dict with the nutrients
+    del new_stats_dic["calories"]           # remove the 'calories'
     
     for key in new_stats_dic.items():
-        percentage = compute_percentage(new_stats_dic[key[0]])
+        percentage = compute_percentage(new_stats_dic[key[0]])       # sort the dict by percentage
         new_stats_dic[key[0]].append(percentage)
 
-    bad_nutr = dict(sorted(new_stats_dic.items(), key=lambda r: r[1][2]) [:2])
-    print(bad_nutr)
+    bad_nutr = dict(sorted(new_stats_dic.items(), key=lambda r: r[1][2]) [:2])  # and return the top 2 bad nutrients
 
     return bad_nutr
 
 
-def get_food_examples(nutrient):
+def get_food_examples(nutrient):        # return recommended food examples based on the nutrient
     if nutrient == 'carbohydrates':
         return random.choice([("bread" , "rice" , "pasta", "potatoes", "cereals")])
     elif nutrient == 'protein':
@@ -60,24 +69,24 @@ def get_food_examples(nutrient):
     elif nutrient == 'sugar':
         return random.choice(["ready-made products", "salad dressings", "sweet drinks such as soft drinks", "sweets and pastries"])
 
-def get_volume_adjective(volume_input):
+def get_volume_adjective(volume_input):     # return the proper volume adjective based on the user's input
     if volume_input == "TOP":
         return " highest "
     else:
         return " lowest "
 
-def get_volume_adjective_reverse(volume_input):
+def get_volume_adjective_reverse(volume_input): # return the reverse volume adjective based on the user's input
     if volume_input == "TOP":
         return " less "
     else:
         return " more "
 
-def get_grams(nutrient):
-    if nutrient == 'sodium':
+def get_grams(nutrient):                # return the correct measure based on the nutrient
+    if nutrient == 'sodium':            # 'sodium' is measured in mgrams
         return " mgrams"
     else:
         return " grams"
 
 
-def get_percentage(current, target):
+def get_percentage(current, target):        # calculate the percentage between the current stat and the target
     return str(round(current*100/target - 100))

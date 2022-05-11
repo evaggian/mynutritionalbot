@@ -17,6 +17,10 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
     good_nutr = get_good_nutr(user_date_stats)      # retrieve top 2 nutrient data that have positive values
     bad_nutr = get_bad_nutr(user_date_stats)        # retrieve top 2 nutrient data that have negative values
 
+    if good_nutr == 0 or bad_nutr == 0:          # there are 0 entries for the date specified
+        return "There are no entries for the date specified. Please choose a different day."
+
+
     if user_NL_level == 1:
         scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 1) + "\n" \
         + list(good_nutr.keys())[0].capitalize()  + " and " \
