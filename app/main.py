@@ -115,7 +115,7 @@ def bot():
                 elif volume_low:
                     volume = "LOW"
 
-        if (not date_list):                 #if the user didn't specify for which date, show him info for today
+        if not date_list:                 #if the user didn't specify for which date, show him info for today
             date = get_date("today")
             date_list.append(date) 
         
@@ -177,13 +177,14 @@ def bot():
             msg.body("Let me check that for you...")           # scenario A & B - inform overview, inform specific nutrient stats
             
             text = inform_overview(nutrient_list, date_list ,insight, user_NL_level, user_name, user_first_name)
-            print(text)
-
-            if text == -1:          # profile is not public so no information can be retrieved
+            if text == None:
+                text = "Sorry, there are no entries for the dates requested. Please try different dates."
+            elif text == -1:          # profile is not public so no information can be retrieved
                 text = "Sorry, your profile is not public, so I can't provide you with the information you asked for.\n\n" \
                 + "Please switch your myFitnessPal account to 'pubic' first."
 
-  
+            print(text)
+            
             msg = resp.message()
             msg.body(text)
 

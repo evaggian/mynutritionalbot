@@ -137,73 +137,65 @@ def get_date_stats(user_name, date_input, insight):
 
     print("REQUESTS DATA FOR: " + user_name, date_input, insight)
 
-    if insight == "overview":
-        # if date is single date
-        if len(date_input) == 1:
-            friend_current_stats = client.get_date(date_input[0].year, date_input[0].month, date_input[0].day, username=user_name)
+    # if date is single date
+    if len(date_input) == 1:
+        friend_current_stats = client.get_date(date_input[0].year, date_input[0].month, date_input[0].day, username=user_name)
 
-            if not friend_current_stats:      # if the profile is private, return error message
-                return -1
+        if not friend_current_stats.meals:      # if the profile is private, return error message
+            return -1
 
-            remainder_stats = calculate_remainder(friend_current_stats.totals, friend_current_stats.goals)
+        remainder_stats = calculate_remainder(friend_current_stats.totals, friend_current_stats.goals)
 
-            if not friend_current_stats.totals:     # if this date's entry is empty, create a dict with 0 values
-                totals = {'calories': 0, 'carbohydrates': 0, 'fat': 0, 'protein': 0, 'sodium': 0, 'sugar': 0}
+        if friend_current_stats.totals:     # if this date's entry is empty, create a dict with 0 values
+            stats = defaultdict(list)   # create a dict combining dics from totals, goals and remainder
 
-                stats = defaultdict(list)       # create a dict combining dics from totals, goals and remainder
+            for stat in (friend_current_stats.totals, friend_current_stats.goals, remainder_stats):
+                for key, value in stat.items():
+                    stats[key].append(value)
 
-                for stat in (totals, friend_current_stats.goals, remainder_stats):
-                    for key, value in stat.items():
-                        stats[key].append(value)
-
-            else:                           # if this date's entry has values
-                stats = defaultdict(list)   # create a dict combining dics from totals, goals and remainder
-
-                for stat in (friend_current_stats.totals, friend_current_stats.goals, remainder_stats):
-                    for key, value in stat.items():
-                        stats[key].append(value) 
-    
             print("Stats:", stats)
             return stats
+        else:               # if there are no entries for the date specified
+            return None
 
-        # if it is a comparison between dates
+    # if it is a comparison between dates
+    else:
+        print(date_input[0])
+        print(date_input[1])
+
+        # initialize dictionaries with 0
+        totals = dict.fromkeys(['calories','carbohydrates','fat','protein','sodium','sugar'], 0)
+        goals = dict.fromkeys(['calories','carbohydrates','fat','protein','sodium','sugar'], 0)
+        no_entries = 0
+
+        # for every day between 2 dates, retrieve totals + goals and sum them up
+        for single_date in daterange(date_input[0], date_input[1]):
+            friend_current_stats = client.get_date(single_date.strftime("%Y"), single_date.strftime("%m"), single_date.strftime("%d"), username=user_name)
+
+            if not friend_current_stats.meals:      # if the profile is private, return error message
+                return -1
+
+            totals = {key: friend_current_stats.totals.get(key, 0) + totals.get(key, 0) 
+            for key in set(friend_current_stats.totals) | set(totals)}
+
+            # calculate how many days we have entries for
+            if( friend_current_stats.totals.get("calories") != None):
+                no_entries += 1
+
+            goals = {key: friend_current_stats.goals.get(key, 0) + goals.get(key, 0)
+            for key in set(friend_current_stats.goals) | set(goals)}
+
+        # calculate average totals among the number of days entried and round it to 1 digit
+        # if there are no entries, create a dict with 0
+        print(no_entries)
+        if no_entries == 0:          # if there are no entries for the date specified
+            return None
         else:
-            start_date = date_input[0]
-            end_date = date_input[1]
-
-            print(start_date)
-            print(end_date)
-
-            # initialize dictionaries with 0
-            totals = dict.fromkeys(['calories','carbohydrates','fat','protein','sodium','sugar'], 0)
-            goals = dict.fromkeys(['calories','carbohydrates','fat','protein','sodium','sugar'], 0)
-            no_entries = 0
-
-            # for every day between 2 dates, retrieve totals + goals and sum them up
-            for single_date in daterange(start_date, end_date):
-                friend_current_stats = client.get_date(single_date.strftime("%Y"), single_date.strftime("%m"), single_date.strftime("%d"), username=user_name)
-
-                totals = {key: friend_current_stats.totals.get(key, 0) + totals.get(key, 0) 
-                for key in set(friend_current_stats.totals) | set(totals)}
-
-                # calculate how many days we have entries for
-                if( friend_current_stats.totals.get("calories") != None):
-                    no_entries += 1
-
-                goals = {key: friend_current_stats.goals.get(key, 0) + goals.get(key, 0)
-                for key in set(friend_current_stats.goals) | set(goals)}
-
-            # calculate average totals among the number of days entried and round it to 1 digit
-            # if there are no entries, create a dict with 0
-            print(no_entries)
-            if (no_entries == 0):
-                avg_totals = {k: 0 for k in set(totals)}
-            else:
-                avg_totals = {key: round(totals.get(key, 0) / no_entries, 1)      
-                for key in set(totals)}
+            avg_totals = {key: round(totals.get(key, 0) / no_entries, 1)    
+            for key in set(totals)}
 
             # calculate average goals among the duration of days and round it to 1 digit 
-            avg_goals = {key: round(goals.get(key, 0) / int((end_date - start_date).days + 1), 1)        
+            avg_goals = {key: round(goals.get(key, 0) / int((date_input[1] - date_input[0]).days + 1), 1)        
                 for key in set(goals)}
 
             # calculate average remainder
@@ -217,8 +209,3 @@ def get_date_stats(user_name, date_input, insight):
 
             print(stats)
             return stats
-
-    else:
-        print("There is no 'insight' attribute specified")
-
-#get_info('evaggiab', 'today','overview')  

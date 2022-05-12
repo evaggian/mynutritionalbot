@@ -7,8 +7,11 @@ def inform_overview(nutrient_list, date_list , insight, user_NL_level, user_name
 
     user_date_stats = get_date_stats(user_name ,date_list ,insight)     # retrieve all stats of the requuested date
 
-    if user_date_stats["calories"][0] == 0:       # if the profile is private, return error message
+    if user_date_stats == -1:       # if the profile is private, return error message
         return -1
+    elif user_date_stats == None:   # there are no entries for the date specified
+        return None
+
 
     if not nutrient_list:
         return get_overview_text(user_NL_level, user_first_name, user_date_stats)   # return nlg text - overview
