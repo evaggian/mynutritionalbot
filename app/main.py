@@ -153,9 +153,17 @@ def bot():
             msg = resp.message()
             msg.body(text)
         elif (food_info_requested):                            # scenario C - inform food consumption
-            food_info = get_food_info(user_name, date_list, nutrient_list, volume)
-            print(food_info)
-            text = get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume)
+            print("date_list:", date_list)
+            if not nutrient_list:                   # if no nutrient was specified, set nutrient_list to 'calories'
+                nutrient_list.append("calories")
+
+            food_info = get_food_info(user_name, date_list, nutrient_list[0], volume)
+            
+            if food_info == -1:          # profile is not public so no information can be retrieved
+                text = "Sorry, your profile is not public, so I can't provide you with the information you asked for.\n\n" \
+                + "Please switch your myFitnessPal account to 'pubic' first."
+            else:    
+                text = get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume)
 
             print(text)
   
@@ -168,6 +176,11 @@ def bot():
             
             text = inform_overview(nutrient_list, date_list ,insight, user_NL_level, user_name, user_first_name)
             print(text)
+
+            if text == -1:          # profile is not public so no information can be retrieved
+                text = "Sorry, your profile is not public, so I can't provide you with the information you asked for.\n\n" \
+                + "Please switch your myFitnessPal account to 'pubic' first."
+
   
             msg = resp.message()
             msg.body(text)

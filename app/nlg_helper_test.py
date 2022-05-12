@@ -25,7 +25,7 @@ def test_get_good_nutr():
     assert good_nutrient == {'sodium': [10.0, 2300.0, 2290.0, -100], 'carbohydrates': [12.0, 215.0, 203.0, -94]}
 
 def test_get_good_nutr_no_entries():
-    user_date_stats = {'calories': [0, 1720.0, 1720.0], 'carbohydrates': [0, 215.0, 215.0], 'fat': [0, 57.0, 57.0], 'protein': [0, 86.0, 86.0], 'sodium': [0, 2300.0, 2300.0], 'sugar': [0, 65.0, 65.0]}
+    user_date_stats = {'calories': [0, 2340.0, 2340.0], 'carbohydrates': [0, 293.0, 293.0], 'fat': [0, 78.0, 78.0], 'protein': [0, 117.0, 117.0], 'sodium': [0, 2300.0, 2300.0], 'sugar': [0, 88.0, 88.0]}
     good_nutrient = get_good_nutr(user_date_stats)
     assert good_nutrient == 0
 
@@ -35,7 +35,7 @@ def test_get_bad_nutr():
     assert bad_nutrient == {'fat': [21.0, 57.0, 36.0, -63], 'sugar': [1.0, 65.0, 64.0, -98]}
 
 def test_get_bad_nutr_no_entries():
-    user_date_stats = {'calories': [0, 1720.0, 1720.0], 'carbohydrates': [0, 215.0, 215.0], 'fat': [0, 57.0, 57.0], 'protein': [0, 86.0, 86.0], 'sodium': [0, 2300.0, 2300.0], 'sugar': [0, 65.0, 65.0]}
+    user_date_stats = {'calories': [0, 2340.0, 2340.0], 'carbohydrates': [0, 293.0, 293.0], 'fat': [0, 78.0, 78.0], 'protein': [0, 117.0, 117.0], 'sodium': [0, 2300.0, 2300.0], 'sugar': [0, 88.0, 88.0]}
     bad_nutrient = get_bad_nutr(user_date_stats)
-    assert bad_nutrient == 0
+    assert bad_nutrient == 0 
  

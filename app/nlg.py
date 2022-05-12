@@ -7,13 +7,15 @@ def inform_overview(nutrient_list, date_list , insight, user_NL_level, user_name
 
     user_date_stats = get_date_stats(user_name ,date_list ,insight)     # retrieve all stats of the requuested date
 
+    if user_date_stats["calories"][0] == 0:       # if the profile is private, return error message
+        return -1
+
     if not nutrient_list:
         return get_overview_text(user_NL_level, user_first_name, user_date_stats)   # return nlg text - overview
     else:
         return get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats)  # return nlg text - specific nutrient
 
 def get_overview_text(user_NL_level, user_first_name, user_date_stats):
-
     good_nutr = get_good_nutr(user_date_stats)      # retrieve top 2 nutrient data that have positive values
     bad_nutr = get_bad_nutr(user_date_stats)        # retrieve top 2 nutrient data that have negative values
 
@@ -279,7 +281,8 @@ def get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input):   
         + nutrient_list[0] \
         + ". I know that changing what you eat is hard but consider your goal."
 
-        return scenario_2
+        return random.choice([scenario_1, scenario_2])
+
 
 
 def get_first_time_user_text(user_first_name):
