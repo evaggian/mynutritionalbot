@@ -158,10 +158,12 @@ def bot():
                 nutrient_list.append("calories")
 
             food_info = get_food_info(user_name, date_list, nutrient_list[0], volume)
-            
+
             if food_info == -1:          # profile is not public so no information can be retrieved
                 text = "Sorry, your profile is not public, so I can't provide you with the information you asked for.\n\n" \
                 + "Please switch your myFitnessPal account to 'pubic' first."
+            elif food_info == None:     # there are no food entries for the dates requested, so return error message to the user
+                text = "Sorry, there are no entries for the dates requested. Please try different dates."
             else:    
                 text = get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume)
 

@@ -21,55 +21,63 @@ def daterange(start_date, end_date):
 def get_top_food(meals, nutrient):
     top = 0
     top_food = None
-    for meal in meals:          # meal={breakfast, lunch, dinner, snacks}
-        for entry in meal:      # for every entry of this meal
-                if (entry.totals[nutrient]) > top:
-                    top = entry.totals[nutrient]
-                    top_food = entry.name
+    if meals:
+        for meal in meals:          # meal={breakfast, lunch, dinner, snacks}
+            for entry in meal:      # for every entry of this meal
+                    if (entry.totals[nutrient]) > top:
+                        top = entry.totals[nutrient]
+                        top_food = entry.name
 
-    if (top_food == None): 
-        return None
-    else:
-        return({top_food:top})  # return a dictionary with key the name of the food,
-                                # and value the top value of the nutrient requested
+        if top_food == None: 
+            return None
+        else:
+            return({top_food:top})  # return a dictionary with key the name of the food,
+                                    # and value the top value of the nutrient requested
+    return None
 
 # calculate the food with the lowest nutrient among the entries in MFP
 def get_low_food(meals, nutrient):
     low = 100000
     low_food = None
-    for meal in meals:          # meal={breakfast, lunch, dinner, snacks}
-        for entry in meal:      # for every entry of this meal
-                if (entry.totals[nutrient]) < low:
-                    low = entry.totals[nutrient]
-                    low_food = entry.name
+    if meals:
+        for meal in meals:          # meal={breakfast, lunch, dinner, snacks}
+            for entry in meal:      # for every entry of this meal
+                    if (entry.totals[nutrient]) < low:
+                        low = entry.totals[nutrient]
+                        low_food = entry.name
 
-    if (low_food == None): 
-        return None
-    else:
-        return({low_food:low})  # return a dictionary with key the name of the food,
-                                # and value the lowest value of the nutrient requested
+        if low_food == None: 
+            return None
+        else:
+            return({low_food:low})  # return a dictionary with key the name of the food,
+                                    # and value the lowest value of the nutrient requested
+    return None
 
 # from a list of top food, find and return the toppest food by value
 def get_top_food_list(top_food_list):          
     top = 0 
     top_food = None
-    for index in range(len(top_food_list)):
-        for key in top_food_list[index]:
-            if top_food_list[index][key] > top:
-                top = top_food_list[index][key]
-                top_food = top_food_list[index]
-    return(top_food)   
+    if top_food_list:                                   # if the list is not empty
+        for index in range(len(top_food_list)):         # find the food with the highest nutrient value and return it
+            for key in top_food_list[index]:
+                if top_food_list[index][key] > top:
+                    top = top_food_list[index][key]
+                    top_food = top_food_list[index]
+        return(top_food)
+    return None
 
 # from a list of low food, find and return the lowest food by value
 def get_low_food_list(low_food_list):       
     low = 100000 
     low_food = None
-    for index in range(len(low_food_list)):
-        for key in low_food_list[index]:
-            if low_food_list[index][key] < low:
-                low = low_food_list[index][key]
-                low_food = low_food_list[index]
-    return(low_food)    
+    if low_food_list:                               # if the list is not empty
+        for index in range(len(low_food_list)):     # find the food with the lowest nutrient value and return it
+            for key in low_food_list[index]:
+                if low_food_list[index][key] < low:
+                    low = low_food_list[index][key]
+                    low_food = low_food_list[index]
+        return(low_food)    
+    return None 
 
 # for the time range given, call get_top_food or get_low_food and return the information requested
 def get_food_info(user_name, date_input, nutrient, volume):
@@ -83,6 +91,7 @@ def get_food_info(user_name, date_input, nutrient, volume):
 
         if volume == "TOP":
             meals = friend_current_stats.meals
+            print("meals here:", meals)
             top_food = get_top_food(meals, nutrient)
             print("top food: ", top_food)
             return top_food
@@ -109,12 +118,14 @@ def get_food_info(user_name, date_input, nutrient, volume):
             if volume == "TOP":
                 meals = friend_current_stats.meals
                 top_food = get_top_food(meals, nutrient)
-                top_food_list.append(top_food)
+                if top_food:                                    # if there is a food entry, add it to the list
+                    top_food_list.append(top_food)
 
             elif volume == "LOW":
                 meals = friend_current_stats.meals
-                low_food = get_low_food(meals, nutrient)
-                low_food_list.append(low_food)
+                low_food = get_low_food(meals, nutrient)        
+                if low_food:                                   # if there is a food entry, add it to the list
+                    low_food_list.append(low_food)
 
         if volume == "TOP":
             return get_top_food_list(top_food_list)
