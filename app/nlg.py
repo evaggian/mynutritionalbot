@@ -112,6 +112,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
 
 
 def get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats):
+    print("user_date_stats: ", user_date_stats)
 
     good_stats = True                   # if the value is positive give positive feadback
     for nutrient in nutrient_list:
@@ -160,7 +161,7 @@ def get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats):
             + "Looks good! Keep it up 😀\n\n" \
             + "Anything else I can help with?"
 
-            return random.choice([scenario_1, scenario_2])
+            return random.choice([scenario_2])
         
     else:
         if user_NL_level == 1:
