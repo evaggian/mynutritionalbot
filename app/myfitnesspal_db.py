@@ -1,10 +1,9 @@
-from multiprocessing.connection import Client
 import myfitnesspal
 from datetime import timedelta
 from collections import defaultdict
-#import database_config as cfg
+import database_config as cfg
 
-client = myfitnesspal.Client(username="evaggiab", password="myChatbot2022")
+client = myfitnesspal.Client(username=cfg.mfp["username"], password=cfg.mfp["password"])
 
 # compare current and goal nutrient and return the remainder in a dict
 def calculate_remainder(totals, goals):

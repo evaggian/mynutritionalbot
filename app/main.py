@@ -65,6 +65,8 @@ def bot():
                     msg = resp.message()
                     msg.body(text)
 
+                    update_first_time(user_name)            # update the database, setting 'first time' to 0
+
                 else:
                     scenario_1 = "Hi " + user_first_name + "!\n\n" \
                     + "How can I help you today?"

@@ -1,7 +1,7 @@
 import random
 
-from myfitnesspal_db import *
-from nlg_helper import *
+from app.myfitnesspal_db import *
+from app.nlg_helper import *
 
 def inform_overview(nutrient_list, date_list , insight, user_NL_level, user_name, user_first_name):
 
