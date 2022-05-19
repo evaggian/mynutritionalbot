@@ -25,88 +25,201 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
     if good_nutr == 0 or bad_nutr == 0:          # there are 0 entries for the date specified
         return "There are no entries for the date specified. Please choose a different day."
 
+    if (bad_nutr[list(bad_nutr.keys())[0]][0]  < bad_nutr[list(bad_nutr.keys())[0]][1] and      # if there are no negative values, set no_bad_nutr to True
+    bad_nutr[list(bad_nutr.keys())[1]][0] < bad_nutr[list(bad_nutr.keys())[1]][1]):
+        no_bad_nutr = True
+    else: no_bad_nutr = False
+
 
     if user_NL_level == 1:
-        scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 1) + "\n" \
-        + list(good_nutr.keys())[0].capitalize()  + " and " \
-        + list(good_nutr.keys())[1]  + " are kept on a good level.\n\nHowever, your " \
-        + list(bad_nutr.keys())[0]  + " and " \
-        + list(bad_nutr.keys())[1] + " intake needs a bit " \
-        + random.choice(["of work", "of improvement"]) \
-        + ".\nYou could consider eating" \
-        + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and " \
-        + " less " + get_food_examples(list(bad_nutr.keys())[1]) + ".\n\n" \
-        +  "Is everything clear to you? Do you have any further questions you'd like to ask me?"""
 
-        scenario_2 = "So, the good news is that " \
-        + list(good_nutr.keys())[0] + " and " \
-        + list(good_nutr.keys())[1] + " are around the recommended intake. 🎉🎉\n\nHowever, you should consider cutting down on " \
-        + list(bad_nutr.keys())[0] + " and " \
-        + list(bad_nutr.keys())[1] + ", as it will not help you achieve your goal.\n\nHow about eating" \
-        + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and" \
-        + " less " + get_food_examples(list(bad_nutr.keys())[1]) + "?\n\nWould you like to ask something more?"
+        if no_bad_nutr:
+            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 1) + "\n" \
+            + list(good_nutr.keys())[0].capitalize()  + " and " \
+            + list(good_nutr.keys())[1]  + " are kept on a good level.\nSame for your " \
+            + list(bad_nutr.keys())[0]  + " and " \
+            + list(bad_nutr.keys())[1] + " intake.\n\n" \
+            +  "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+
+            scenario_2 = "So, the good news is that " \
+            + list(good_nutr.keys())[0] + " and " \
+            + list(good_nutr.keys())[1] + " are around the recommended intake. 🎉🎉\n\nSimilarly, your " \
+            + list(bad_nutr.keys())[0] + " and " \
+            + list(bad_nutr.keys())[1] + " are good and can help you achieve your goal.\n\n" \
+            + "Would you like to ask something more?"
+
+        else:
+            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 1) + "\n" \
+            + list(good_nutr.keys())[0].capitalize()  + " and " \
+            + list(good_nutr.keys())[1]  + " are kept on a good level.\n\nHowever, your " \
+            + list(bad_nutr.keys())[0]  + " and " \
+            + list(bad_nutr.keys())[1] + " intake needs a bit " \
+            + random.choice(["of work", "of improvement"]) \
+            + ".\nYou could consider eating" \
+            + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and " \
+            + " less " + get_food_examples(list(bad_nutr.keys())[1]) + ".\n\n" \
+            +  "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+
+            scenario_2 = "So, the good news is that " \
+            + list(good_nutr.keys())[0] + " and " \
+            + list(good_nutr.keys())[1] + " are around the recommended intake. 🎉🎉\n\nHowever, you should consider cutting down on " \
+            + list(bad_nutr.keys())[0] + " and " \
+            + list(bad_nutr.keys())[1] + ", as it will not help you achieve your goal.\n\nHow about eating" \
+            + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and" \
+            + " less " + get_food_examples(list(bad_nutr.keys())[1]) + "?\n\nWould you like to ask something more?"
 
         return random.choice([scenario_1, scenario_2])
 
     elif user_NL_level == 2:
-        scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 2) + "\n\n" \
-        + list(good_nutr.keys())[0].capitalize() + " and " \
-        + list(good_nutr.keys())[1] + " are kept on a good level.\n\nHowever, your " \
-        + list(bad_nutr.keys())[0] + " and " \
-        + list(bad_nutr.keys())[1] + " intake needs a bit " \
-        + random.choice(["of work", "of improvement"]) \
-        + ". You could consider eating" \
-        + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and" \
-        + " less " + get_food_examples(list(bad_nutr.keys())[1]) + ".\n\n" \
-        +  "Is everything clear to you? Do you have any further questions you'd like to ask me?"""
 
-        scenario_2 = "So, the good news is that " \
-        + list(good_nutr.keys())[0] + " (" \
-        + str(good_nutr[list(good_nutr.keys())[0]][0]) + "/" \
-        + str(good_nutr[list(good_nutr.keys())[0]][1]) + ") and " \
-        + list(good_nutr.keys())[1] + " (" \
-        + str(good_nutr[list(good_nutr.keys())[1]][0]) + "/" \
-        + str(good_nutr[list(good_nutr.keys())[1]][1]) +")  are around the recommended intake. 🎉🎉\n\nHowever, you should consider cutting down on " \
-        + list(bad_nutr.keys())[0] + " and " \
-        + list(bad_nutr.keys())[1] + " , as it will not help you achieve your goal. How about eating " \
-        + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and" \
-        + " less " + get_food_examples(list(bad_nutr.keys())[1]) + " for a healthy diet?\n\nWould you like to ask something more?"""
+        if no_bad_nutr:
+            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 2) + "\n\n" \
+            + list(good_nutr.keys())[0].capitalize() + " and " \
+            + list(good_nutr.keys())[1] + " are kept on a good level.\n\nSame for your " \
+            + list(bad_nutr.keys())[0] + " and " \
+            + list(bad_nutr.keys())[1] + " intake.\n\n" \
+            +  "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+
+            scenario_2 = "So, the good news is that " \
+            + list(good_nutr.keys())[0] + " (" \
+            + str(good_nutr[list(good_nutr.keys())[0]][0]) + "/" \
+            + str(good_nutr[list(good_nutr.keys())[0]][1]) \
+            + get_grams(list(good_nutr.keys())[0]) + ") and " \
+            + list(good_nutr.keys())[1] + " (" \
+            + str(good_nutr[list(good_nutr.keys())[1]][0]) + "/" \
+            + str(good_nutr[list(good_nutr.keys())[1]][1]) \
+            + get_grams(list(good_nutr.keys())[1]) + ") are around the recommended intake. 🎉🎉\n\nSimilarly, your " \
+            + list(bad_nutr.keys())[0] + " (" \
+            + str(bad_nutr[list(bad_nutr.keys())[0]][0]) + "/" \
+            + str(bad_nutr[list(bad_nutr.keys())[0]][1]) \
+            + get_grams(list(bad_nutr.keys())[0]) + ") and " \
+            + list(bad_nutr.keys())[1] + " (" \
+            + str(bad_nutr[list(bad_nutr.keys())[1]][0]) + "/" \
+            + str(bad_nutr[list(bad_nutr.keys())[1]][1])  \
+            + get_grams(list(bad_nutr.keys())[1]) + ") are good and can help you achieve your goal.\n\n" \
+            + "Would you like to ask something more?"
+
+        else:
+            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 2) + "\n\n" \
+            + list(good_nutr.keys())[0].capitalize() + " and " \
+            + list(good_nutr.keys())[1] + " are kept on a good level.\n\nHowever, your " \
+            + list(bad_nutr.keys())[0] + " and " \
+            + list(bad_nutr.keys())[1] + " intake needs a bit " \
+            + random.choice(["of work", "of improvement"]) \
+            + ". You could consider eating" \
+            + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and" \
+            + " less " + get_food_examples(list(bad_nutr.keys())[1]) + ".\n\n" \
+            +  "Is everything clear to you? Do you have any further questions you'd like to ask me?"""
+
+            scenario_2 = "So, the good news is that " \
+            + list(good_nutr.keys())[0] + " (" \
+            + str(good_nutr[list(good_nutr.keys())[0]][0]) + "/" \
+            + str(good_nutr[list(good_nutr.keys())[0]][1]) \
+            + get_grams(list(good_nutr.keys())[0]) + ") and " \
+            + list(good_nutr.keys())[1] + " (" \
+            + str(good_nutr[list(good_nutr.keys())[1]][0]) + "/" \
+            + str(good_nutr[list(good_nutr.keys())[1]][1]) \
+            + get_grams(list(good_nutr.keys())[1]) + ") are around the recommended intake. 🎉🎉\n\nHowever, you should consider cutting down on " \
+            + list(bad_nutr.keys())[0] + " and " \
+            + list(bad_nutr.keys())[1] + " , as it will not help you achieve your goal. How about eating " \
+            + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and" \
+            + " less " + get_food_examples(list(bad_nutr.keys())[1]) + " for a healthy diet?\n\nWould you like to ask something more?"
 
         return random.choice([scenario_1, scenario_2])
 
     elif user_NL_level == 3:
-        scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 3) + "\n" \
-        + "\nYou had " \
-        + str(good_nutr[list(good_nutr.keys())[0]][0]) + " out of " \
-        + str(good_nutr[list(good_nutr.keys())[0]][1]) + " of " \
-        + list(good_nutr.keys())[0] + " and " \
-        + str(good_nutr[list(good_nutr.keys())[1]][0]) + " out of " \
-        + str(good_nutr[list(good_nutr.keys())[1]][1]) + " of " \
-        + list(good_nutr.keys())[1] + " which is great!\n\nHowever, your " \
-        + list(bad_nutr.keys())[0] + "(" \
-        + str(bad_nutr[list(bad_nutr.keys())[0]][0]) + ") and " \
-        + list(bad_nutr.keys())[1] + "(" \
-        + str(bad_nutr[list(bad_nutr.keys())[0]][1]) + ") intake exceeded the recommended intake (" \
-        + str(bad_nutr[list(bad_nutr.keys())[0]][0])  + "/ " \
-        + str(bad_nutr[list(bad_nutr.keys())[0]][1]) + " and " \
-        + str(bad_nutr[list(bad_nutr.keys())[1]][0])  + "/ " \
-        + str(bad_nutr[list(bad_nutr.keys())[1]][1]) + " respectively). You could consider cutting down on these.\n\n" \
-        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+        if no_bad_nutr:
+            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 3) + "\n" \
+            + "\nYou had " \
+            + str(good_nutr[list(good_nutr.keys())[0]][0]) + " out of " \
+            + str(good_nutr[list(good_nutr.keys())[0]][1]) \
+            + get_grams(list(good_nutr.keys())[0]) + " of " \
+            + list(good_nutr.keys())[0] + " and " \
+            + str(good_nutr[list(good_nutr.keys())[1]][0]) + " out of " \
+            + str(good_nutr[list(good_nutr.keys())[1]][1]) \
+            + get_grams(list(good_nutr.keys())[1]) + " of " \
+            + list(good_nutr.keys())[1] + " which is great!\n\nSame for your " \
+            + list(bad_nutr.keys())[0] + " and " \
+            + list(bad_nutr.keys())[1] + " intake (" \
+            + str(bad_nutr[list(bad_nutr.keys())[0]][0])  + "/ " \
+            + str(bad_nutr[list(bad_nutr.keys())[0]][1]) \
+            + get_grams(list(bad_nutr.keys())[0]) + " and " \
+            + str(bad_nutr[list(bad_nutr.keys())[1]][0])  + "/ " \
+            + str(bad_nutr[list(bad_nutr.keys())[1]][1]) \
+            + get_grams(list(bad_nutr.keys())[1]) \
+            + " respectively).\n\n" \
+            + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
 
 
-        scenario_2 = "So the good news is that " \
-        + list(good_nutr.keys())[0] + " and " \
-        + list(good_nutr.keys())[1] + " are on target.\n\nYou had " \
-        + str(good_nutr[list(good_nutr.keys())[0]][0]) + " of " \
-        + list(good_nutr.keys())[0] + " and " \
-        + str(good_nutr[list(good_nutr.keys())[1]][0]) + " of " \
-        + list(good_nutr.keys())[1] + " which are around the recommended intake (" \
-        + str(good_nutr[list(good_nutr.keys())[1]][0]) + " and " \
-        + str(good_nutr[list(good_nutr.keys())[1]][1]) + " for each) 🔝.\n\nHowever, you should consider cutting down on " \
-        + list(bad_nutr.keys())[0] + " and " \
-        + list(bad_nutr.keys())[1] + ", as you had an additional " \
-        + str(bad_nutr[list(bad_nutr.keys())[0]][2]) + " and " \
-        + str(bad_nutr[list(bad_nutr.keys())[1]][2]) + " of them, and it will not help you achieve your goal.\n\nWould you like to ask something more?"
+            scenario_2 = "So the good news is that " \
+            + list(good_nutr.keys())[0] + " and " \
+            + list(good_nutr.keys())[1] + " are on target.\n\nYou had " \
+            + str(good_nutr[list(good_nutr.keys())[0]][0]) \
+            + get_grams(list(good_nutr.keys())[0]) + " of " \
+            + list(good_nutr.keys())[0] + " and " \
+            + str(good_nutr[list(good_nutr.keys())[1]][0]) \
+            + get_grams(list(good_nutr.keys())[1]) + " of " \
+            + list(good_nutr.keys())[1] + " which are around the recommended intake (" \
+            + str(good_nutr[list(good_nutr.keys())[0]][1]) \
+            + get_grams(list(good_nutr.keys())[0]) + " and " \
+            + str(good_nutr[list(good_nutr.keys())[1]][1]) \
+            + get_grams(list(good_nutr.keys())[1]) + " for each) 🔝.\n\nSimilarly, your " \
+            + list(bad_nutr.keys())[0] + " (" \
+            + str(bad_nutr[list(bad_nutr.keys())[0]][0]) + "/" \
+            + str(bad_nutr[list(bad_nutr.keys())[0]][1]) \
+            + get_grams(list(bad_nutr.keys())[0]) + ") and " \
+            + list(bad_nutr.keys())[1] + " (" \
+            + str(bad_nutr[list(bad_nutr.keys())[1]][0]) + "/" \
+            + str(bad_nutr[list(bad_nutr.keys())[1]][1]) \
+            + get_grams(list(bad_nutr.keys())[1]) + ") " \
+            + "are good and can help you achieve your goal.\n\nWould you like to ask something more?"
+
+        else:
+            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 3) + "\n" \
+            + "\nYou had " \
+            + str(good_nutr[list(good_nutr.keys())[0]][0]) + " out of " \
+            + str(good_nutr[list(good_nutr.keys())[0]][1]) \
+            + get_grams(list(good_nutr.keys())[0]) + " of " \
+            + list(good_nutr.keys())[0] + " and " \
+            + str(good_nutr[list(good_nutr.keys())[1]][0]) + " out of " \
+            + str(good_nutr[list(good_nutr.keys())[1]][1]) \
+            + get_grams(list(good_nutr.keys())[1]) + " of " \
+            + list(good_nutr.keys())[1] + " which is great!\n\nHowever, your " \
+            + list(bad_nutr.keys())[0] + "(" \
+            + str(bad_nutr[list(bad_nutr.keys())[0]][0]) \
+            + get_grams(list(bad_nutr.keys())[0]) + ") and " \
+            + list(bad_nutr.keys())[1] + "(" \
+            + str(bad_nutr[list(bad_nutr.keys())[0]][1]) \
+            + get_grams(list(bad_nutr.keys())[1]) + ") intake exceeded the recommended intake (" \
+            + str(bad_nutr[list(bad_nutr.keys())[0]][0])  + "/ " \
+            + str(bad_nutr[list(bad_nutr.keys())[0]][1]) \
+            + get_grams(list(bad_nutr.keys())[0]) + " and " \
+            + str(bad_nutr[list(bad_nutr.keys())[1]][0])  + "/ " \
+            + str(bad_nutr[list(bad_nutr.keys())[1]][1]) \
+            + get_grams(list(bad_nutr.keys())[1]) + " respectively). You could consider cutting down on these.\n\n" \
+            + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+
+
+            scenario_2 = "So the good news is that " \
+            + list(good_nutr.keys())[0] + " and " \
+            + list(good_nutr.keys())[1] + " are on target.\n\nYou had " \
+            + str(good_nutr[list(good_nutr.keys())[0]][0]) \
+            + get_grams(list(good_nutr.keys())[0]) + " of " \
+            + list(good_nutr.keys())[0] + " and " \
+            + str(good_nutr[list(good_nutr.keys())[1]][0]) + " of " \
+            + list(good_nutr.keys())[1] \
+            + get_grams(list(good_nutr.keys())[1]) + " which are around the recommended intake (" \
+            + str(good_nutr[list(good_nutr.keys())[1]][0]) \
+            + get_grams(list(good_nutr.keys())[0]) + " and " \
+            + str(good_nutr[list(good_nutr.keys())[1]][1]) \
+            + get_grams(list(bad_nutr.keys())[1]) + " for each) 🔝.\n\nHowever, you should consider cutting down on " \
+            + list(bad_nutr.keys())[0] + " and " \
+            + list(bad_nutr.keys())[1] + ", as you had an additional " \
+            + str(bad_nutr[list(bad_nutr.keys())[0]][2]) \
+            + get_grams(list(bad_nutr.keys())[0]) + " and " \
+            + str(bad_nutr[list(bad_nutr.keys())[1]][2]) \
+            + get_grams(list(bad_nutr.keys())[1]) + " of them, and it will not help you achieve your goal.\n\nWould you like to ask something more?"
+
 
         return random.choice([scenario_1, scenario_2])
 
