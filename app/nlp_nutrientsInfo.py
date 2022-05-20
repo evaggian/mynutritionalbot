@@ -154,10 +154,10 @@ def get_sodium_scenario(user_NL_level):
 
     elif user_NL_level == 3: 
         scenarios =  ["The sodium content of salt is needed to regulate the amount of water in our body, " + 
-        "transmit signals from the nerves, and move the muscles. However, salt intake is usually higher than recommended.\n\n" +
+        "transmit signals from the nerves, and move the muscles. However, sodium intake is usually higher than recommended.\n\n" +
         "Recommended daily intake: < 3750 grams",
-        "A large amount of salt in the diet can cause high blood pressure, leading to an increased risk of cardiovascular" + 
-        "disease and stroke. The high salt content in food is 1.5g per 100g, and the low salt content is 0.3g per 100g. " + 
+        "A large amount of sodium in the diet can cause high blood pressure, leading to an increased risk of cardiovascular" + 
+        "disease and stroke. The high sodium content in food is 1.5g per 100g, and the low salt content is 0.3g per 100g. " + 
         "Always try to choose the lower salt product.\n\n" +
         "Recommended intake: < 3750 grams"]
 

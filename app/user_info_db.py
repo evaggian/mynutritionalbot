@@ -1,17 +1,23 @@
 import mysql.connector
 import database_config as cfg
 
+db_name = cfg.mysql["db_name"]
+
+# connect to the db
+def connect_db():
+    return mysql.connector.connect(
+            host=cfg.mysql["host"],
+            user=cfg.mysql["user"],
+            password=cfg.mysql["password"]
+        )
 
 # setup db and tables for the first time
 def initialize_db():
-    mychatbot_db = mysql.connector.connect(
-        host=cfg.mysql["host"],
-        user=cfg.mysql["user"],
-        password=cfg.mysql["password"]
-    )
+
+    mychatbot_db = connect_db()
     try:
         mycursor = mychatbot_db.cursor()
-        mycursor.execute("CREATE DATABASE IF NOT EXISTS heroku_5f2973cbf7c2b89")
+        mycursor.execute("CREATE DATABASE IF NOT EXISTS " + db_name)
         mycursor.execute(""" CREATE TABLE IF NOT EXISTS `heroku_5f2973cbf7c2b89`.`users` (
             `id` INT NOT NULL,
             `username` VARCHAR(45) NOT NULL,
@@ -26,7 +32,7 @@ def initialize_db():
             PACK_KEYS = Default; """)
         
         # add your dummy user
-        #mycursor.execute("""INSERT INTO `heroku_5f2973cbf7c2b89`.`users` (`id`, `username`, `nl_level`) VALUES ('1', 'evabot22', '1');""")
+        #mycursor.execute("""INSERT INTO " + db_name + ".`users` (`id`, `username`, `nl_level`) VALUES ('1', 'evabot22', '1');""")
         mychatbot_db.commit()
 
     except mysql.connector.Error as error:
@@ -40,14 +46,11 @@ def initialize_db():
 
 # check if the user exists in the db, check by phone_number connected to it
 def user_exists(phone_number):
-    mychatbot_db = mysql.connector.connect(
-        host=cfg.mysql["host"],
-        user=cfg.mysql["user"],
-        password=cfg.mysql["password"]
-    )
+
+    mychatbot_db = connect_db()
     try:
         mycursor = mychatbot_db.cursor()
-        mycursor.execute("SELECT username FROM `heroku_5f2973cbf7c2b89`.`users` WHERE phone_number = %s", (phone_number,))
+        mycursor.execute("SELECT username FROM " + db_name + ".`users` WHERE phone_number = %s", (phone_number,))
         record = mycursor.fetchone()
         if (record == None):
             return False
@@ -65,14 +68,11 @@ def user_exists(phone_number):
 
 # check if the user starts chatting with the chatbot for the first time
 def first_time(user_name):
-    mychatbot_db = mysql.connector.connect(
-        host=cfg.mysql["host"],
-        user=cfg.mysql["user"],
-        password=cfg.mysql["password"]
-    )
+    
+    mychatbot_db = connect_db()
     try:
         mycursor = mychatbot_db.cursor()
-        mycursor.execute("SELECT first_time FROM `heroku_5f2973cbf7c2b89`.`users` WHERE username = %s", (user_name,))
+        mycursor.execute("SELECT first_time FROM " + db_name + ".`users` WHERE username = %s", (user_name,))
         record = mycursor.fetchone()
 
         if int(record[0]) == 1:
@@ -91,14 +91,11 @@ def first_time(user_name):
 
 # if the user start chatting for the first time, update the first_time column to 0
 def update_first_time(user_name):
-    mychatbot_db = mysql.connector.connect(
-        host=cfg.mysql["host"],
-        user=cfg.mysql["user"],
-        password=cfg.mysql["password"]
-    )
+
+    mychatbot_db = connect_db()
     try:
         mycursor = mychatbot_db.cursor()
-        mycursor.execute("UPDATE `heroku_5f2973cbf7c2b89`.`users` SET `first_time` = '0' WHERE username = %s", (user_name,))
+        mycursor.execute("UPDATE " + db_name + ".`users` SET `first_time` = '0' WHERE username = %s", (user_name,))
 
         mychatbot_db.commit()
 
@@ -116,15 +113,11 @@ def update_first_time(user_name):
 """# get the phone number of the user
 def get_user_phone_number(user_name):
 
-    mychatbot_db = mysql.connector.connect(
-        host=cfg.mysql["host"],
-        user=cfg.mysql["user"],
-        password=cfg.mysql["password"]
-    )
+    mychatbot_db = connect_db()
 
     try:
         mycursor = mychatbot_db.cursor()
-        mycursor.execute("SELECT phone_number FROM `heroku_5f2973cbf7c2b89`.`users` WHERE username = %s", (user_name,))
+        mycursor.execute("SELECT phone_number FROM " + db_name + ".`users` WHERE username = %s", (user_name,))
         record = mycursor.fetchone()
         print(record)
 
@@ -142,14 +135,11 @@ def get_user_phone_number(user_name):
 
 # get the first name of the user
 def get_user_first_name(user_name):
-    mychatbot_db = mysql.connector.connect(
-    host=cfg.mysql["host"],
-    user=cfg.mysql["user"],
-    password=cfg.mysql["password"]
-    )
+
+    mychatbot_db = connect_db()
     try:
         mycursor = mychatbot_db.cursor()
-        mycursor.execute("SELECT first_name FROM `heroku_5f2973cbf7c2b89`.`users` WHERE username = %s", (user_name,))
+        mycursor.execute("SELECT first_name FROM " + db_name + ".`users` WHERE username = %s", (user_name,))
         record = mycursor.fetchone()
         print(record)
 
@@ -166,15 +156,11 @@ def get_user_first_name(user_name):
 
 # retrieve the NL level of the user from the db
 def get_NL_level(user_name):
-    
-    mychatbot_db = mysql.connector.connect(
-        host=cfg.mysql["host"],
-        user=cfg.mysql["user"],
-        password=cfg.mysql["password"]
-    )
+
+    mychatbot_db = connect_db()
     try:
         mycursor = mychatbot_db.cursor()
-        mycursor.execute("SELECT nl_level FROM `heroku_5f2973cbf7c2b89`.`users` WHERE username = %s", (user_name,))
+        mycursor.execute("SELECT nl_level FROM " + db_name + ".`users` WHERE username = %s", (user_name,))
         record = mycursor.fetchone()
 
         return record[0]

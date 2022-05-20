@@ -1,13 +1,15 @@
 import random
 
-def compute_percentage(nutrient_stats):         # compute the percentage of a nutrient between current value and target and round it up
+# compute the percentage of a nutrient between current value and target and round it up
+def compute_percentage(nutrient_stats):         
     if not nutrient_stats:                      # if there is no entry, it is empty
         return -100
     else:
         return round(((int(nutrient_stats[0])*100)/int(nutrient_stats[1])) - 100)
 
-def get_calories(calories_dic, user_NL_level):  # compute calorie percentage and return the text based on the NL_level
 
+# compute calorie percentage and return the text based on the NL_level
+def get_calories(calories_dic, user_NL_level):  
     percentage = compute_percentage(calories_dic)
     print("Percentage: ", percentage)
 
@@ -24,7 +26,9 @@ def get_calories(calories_dic, user_NL_level):  # compute calorie percentage and
 
     return text
 
-def get_good_nutr(user_date_stats):         # find and return the to 2 good nutrients
+
+# find and return the to 2 good nutrients
+def get_good_nutr(user_date_stats):         
     if (user_date_stats["calories"][1] == user_date_stats["calories"][2]):  # if there were no entries for the date requested
         print("0 entries")
         return 0
@@ -40,7 +44,9 @@ def get_good_nutr(user_date_stats):         # find and return the to 2 good nutr
 
     return good_nutr
 
-def get_bad_nutr(user_date_stats):          # find and return the to 2 bad nutrients
+
+# find and return the to 2 bad nutrients
+def get_bad_nutr(user_date_stats):          
     if (user_date_stats["calories"][1] == user_date_stats["calories"][2]):  # if there were no entries for the date requested
         print("0 entries")
         return 0
@@ -57,7 +63,8 @@ def get_bad_nutr(user_date_stats):          # find and return the to 2 bad nutri
     return bad_nutr
 
 
-def get_food_examples(nutrient):        # return recommended food examples based on the nutrient
+# return recommended food examples based on the nutrient
+def get_food_examples(nutrient):        
     if nutrient == 'carbohydrates':
         return random.choice([("bread" , "rice" , "pasta", "potatoes", "cereals")])
     elif nutrient == 'protein':
@@ -69,24 +76,67 @@ def get_food_examples(nutrient):        # return recommended food examples based
     elif nutrient == 'sugar':
         return random.choice(["ready-made products", "salad dressings", "sweet drinks such as soft drinks", "sweets and pastries"])
 
-def get_volume_adjective(volume_input):     # return the proper volume adjective based on the user's input
+
+# return recommended food groups to shift to based on nutrient 
+def get_food_group_examples_less(nutrient):
+    if nutrient == 'carbohydrates':                                   # to avoid repetition, all nutrients offer the same recommendations
+        return random.choice(["nuts and seeds", "fats and oils"])     # except carbs and fat
+    elif nutrient == 'fat':
+        return random.choice(["grains"])
+    else:
+        return random.choice(["fruits", "vegetables"])
+
+
+# return recommended food groups to increase based on nutrient 
+def get_food_group_examples_more(nutrient):
+    if nutrient == 'carbohydrates':                                    
+        return random.choice(["nuts and seeds", "fats and oils"])
+    elif nutrient == 'sugar':
+        return random.choice(["fruits and vegetables that are a natural source of sugar"])
+    elif nutrient == 'fat':
+        return random.choice(["fatty products and oils"])
+    elif nutrient == 'sodium':
+        return random.choice(["grains"])
+    elif nutrient == 'protein':
+        return random.choice(["dairy products"])
+
+    
+# return the proper volume adjective based on the user's input
+def get_volume_adjective(volume_input):
     if volume_input == "TOP":
         return " highest "
     else:
         return " lowest "
 
-def get_volume_adjective_reverse(volume_input): # return the reverse volume adjective based on the user's input
+
+# return the reverse volume adjective based on the user's input
+def get_volume_adjective_reverse(volume_input): 
     if volume_input == "TOP":
         return " less "
     else:
         return " more "
 
-def get_grams(nutrient):                # return the correct measure based on the nutrient
+
+# return the correct measure based on the nutrient
+def get_grams(nutrient):                
     if nutrient == 'sodium':            # 'sodium' is measured in mgrams
         return " mgrams"
     else:
         return " grams"
 
 
-def get_percentage(current, target):        # calculate the percentage between the current stat and the target
+# calculate the percentage between the current stat and the target
+def get_percentage(current, target):
     return str(round(current*100/target - 100))
+
+
+# replace nutrient names based on the user's NL level
+def replace_nutrient(text, user_NL_level):
+    if user_NL_level == 1:
+        text = text.replace('sodium', 'salt')
+        text = text.replace('Sodium', 'Salt')
+    else:
+        text = text.replace('salt', 'sodium')
+        text = text.replace('Salt', 'Sodium')
+
+    return text

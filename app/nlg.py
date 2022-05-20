@@ -68,7 +68,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and" \
             + " less " + get_food_examples(list(bad_nutr.keys())[1]) + "?\n\nWould you like to ask something more?"
 
-        return random.choice([scenario_1, scenario_2])
+        return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
 
     elif user_NL_level == 2:
 
@@ -107,8 +107,8 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + list(bad_nutr.keys())[1] + " intake needs a bit " \
             + random.choice(["of work", "of improvement"]) \
             + ". You could consider eating" \
-            + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and" \
-            + " less " + get_food_examples(list(bad_nutr.keys())[1]) + ".\n\n" \
+            + " more " + get_food_group_examples_less(list(bad_nutr.keys())[0]) + " and" \
+            + " more " + get_food_group_examples_less(list(bad_nutr.keys())[1]) + ".\n\n" \
             +  "Is everything clear to you? Do you have any further questions you'd like to ask me?"""
 
             scenario_2 = "So, the good news is that " \
@@ -122,10 +122,11 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + get_grams(list(good_nutr.keys())[1]) + ") are around the recommended intake. 🎉🎉\n\nHowever, you should consider cutting down on " \
             + list(bad_nutr.keys())[0] + " and " \
             + list(bad_nutr.keys())[1] + " , as it will not help you achieve your goal. How about eating " \
-            + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and" \
-            + " less " + get_food_examples(list(bad_nutr.keys())[1]) + " for a healthy diet?\n\nWould you like to ask something more?"
+            + " more " + get_food_group_examples_less(list(bad_nutr.keys())[0]) + " and" \
+            + " more " + get_food_group_examples_less(list(bad_nutr.keys())[1]) + " for a healthy diet?\n\nWould you like to ask something more?"
 
-        return random.choice([scenario_1, scenario_2])
+        return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
+
 
     elif user_NL_level == 3:
         if no_bad_nutr:
@@ -221,7 +222,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + get_grams(list(bad_nutr.keys())[1]) + " of them, and it will not help you achieve your goal.\n\nWould you like to ask something more?"
 
 
-        return random.choice([scenario_1, scenario_2])
+        return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
 
 
 def get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats):
@@ -241,21 +242,22 @@ def get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats):
             scenario_2 = "It looks good. Keep it up 😀\n\n" \
             + "Anything else I can help with?"
 
-            return random.choice([scenario_1, scenario_2])
+            return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
 
         elif user_NL_level == 2:
             scenario_1 = "Your " + nutrient_list[0] + " intake was " \
             + str(user_date_stats[nutrient_list[0]][0]) \
             + " out of " + str(user_date_stats[nutrient_list[0]][1]) \
-            + " which is below your target. Perhaps you could consider eating more" \
-            + " food_group_1 " \
-            + "for a healthy diet?\n\n" \
+            + get_grams(nutrient_list[0]) \
+            + " which is below your target. Perhaps you could consider eating more " \
+            + get_food_group_examples_more(nutrient_list[0]) \
+            + " for a healthy diet?\n\n" \
             + "Want to know something else?"
 
             scenario_2 = "It looks good. Keep it up 😀\n\n" \
             + "Anything else I can help with?"
 
-            return random.choice([scenario_1, scenario_2])
+            return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
 
         elif user_NL_level == 3:
             scenario_1 = "Your " \
@@ -265,7 +267,8 @@ def get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats):
             + " out of " \
             + str(user_date_stats[nutrient_list[0]][1]) \
             + get_grams(nutrient_list[0]) \
-            + ". That's good. Keep up the good work 💪" 
+            + ". That's good. Keep up the good work 💪" \
+            + "Want to know something else?"
 
             scenario_2 = str(user_date_stats[nutrient_list[0]][0]) \
             + "/" \
@@ -274,7 +277,7 @@ def get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats):
             + "Looks good! Keep it up 😀\n\n" \
             + "Anything else I can help with?"
 
-            return random.choice([scenario_2])
+            return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
         
     else:
         if user_NL_level == 1:
@@ -289,16 +292,16 @@ def get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats):
             + " 😬. It would be better to reduce it.\n\n" \
             + "Anything else I can help with?"
 
-            return random.choice([scenario_1, scenario_2])
+            return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
 
         elif user_NL_level == 2:
             scenario_1 = "Your " + nutrient_list[0] + " intake was " \
             + str(user_date_stats[nutrient_list[0]][0]) \
             + " out of " + str(user_date_stats[nutrient_list[0]][1]) \
             + get_grams(nutrient_list[0]) \
-            + " which is above your target. Perhaps you could consider eating less" \
-            + " food_group_1 " \
-            + "for a healthy diet?\n\n" \
+            + " which is above your target. Perhaps you could consider eating " \
+            + get_food_group_examples_more(nutrient_list[0]) \
+            + " for a healthy diet?\n\n" \
             + "Want to know something else?"
 
             scenario_2 = "Hmm, it seems that you have been eating a lot of " \
@@ -310,7 +313,7 @@ def get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats):
             + " 😬. It would be better to reduce it.\n\n" \
             + "Anything else I can help with?"
 
-            return random.choice([scenario_1, scenario_2])
+            return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
 
         elif user_NL_level == 3:
             scenario_1 = "Your " \
@@ -330,7 +333,7 @@ def get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats):
             + get_percentage(user_date_stats[nutrient_list[0]][0], user_date_stats[nutrient_list[0]][1]) + "%.\n\n""" \
             + "Anything else I can help with?"
 
-            return random.choice([scenario_1, scenario_2])
+            return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
 
 
 def get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input):   # return nlg text about top/lowest food requested
@@ -355,9 +358,15 @@ def get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input):   
         + get_food_examples(nutrient_list[0]) \
         + "."
 
-        return random.choice([scenario_1, scenario_2])
+        return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
 
     elif user_NL_level == 2:
+
+        if volume_input == "TOP":                       # check if you should eat more or less from a food, and return the appropriate food group example
+            food_group_example = get_food_group_examples_less(nutrient_list[0])
+        else:
+            food_group_example = get_food_group_examples_more(nutrient_list[0])
+
         scenario_1 = "Of the foods you ate, " \
         + list(food_info.keys())[0] \
         + " had the " \
@@ -368,7 +377,7 @@ def get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input):   
         + "). Why don't you substitute it with" \
         + get_volume_adjective_reverse(volume_input) \
         + "of " \
-        + "$nutr_1_group."
+        + food_group_example
 
         scenario_2 = list(food_info.keys())[0] \
         + " with " \
@@ -377,9 +386,9 @@ def get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input):   
         + nutrient_list[0] \
         + ". I know that changing what you eat is hard but consider your goal. You could try shifting your balance to eating " \
         + get_volume_adjective_reverse(volume_input) \
-        + "$nutr_1_group."
+        + food_group_example
 
-        return random.choice([scenario_1, scenario_2])
+        return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
 
     elif user_NL_level == 3: 
         scenario_1 = "Of the foods you ate, " \
@@ -398,7 +407,7 @@ def get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input):   
         + nutrient_list[0] \
         + ". I know that changing what you eat is hard but consider your goal."
 
-        return random.choice([scenario_1, scenario_2])
+        return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
 
 
 
