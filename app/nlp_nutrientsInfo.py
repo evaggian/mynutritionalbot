@@ -143,21 +143,21 @@ def get_sodium_scenario(user_NL_level):
         return random.choice(scenarios)
 
     elif user_NL_level == 2: 
-        scenarios =  ["The sodium content of salt is needed to regulate the amount of water in our bodies. \n\n" + 
+        scenarios =  ["Sodium is needed to regulate the amount of water in our bodies. \n\n" + 
         "However, sodium affects blood pressure, leading to cardiovascular problems in the long term. " + 
-        "Recommended daily intake: < 2300 grams",
+        "Recommended daily intake: < 2.3 grams",
         "Sodium is found almost everywhere in the diet, so if you're keeping an eye on your sodium counter, " + 
         "you probably know you don't need to eat salt to go overboard on your sodium levels.\n\n" +
         "Sausages, snacks, fast food (e.g., French fries), and ready-made products (e.g., frozen pizza) have a lot of salt added.\n\n" + 
-        "Recommended daily intake: < 2300 grams"]
+        "Recommended daily intake: < 2.3 grams"]
 
         return random.choice(scenarios)
 
     elif user_NL_level == 3: 
-        scenarios =  ["The sodium content of salt is needed to regulate the amount of water in our body, " + 
+        scenarios =  ["Sodium is needed to regulate the amount of water in our body, " + 
         "transmit signals from the nerves, and move the muscles. However, sodium intake is usually higher than recommended.\n\n" +
-        "Recommended daily intake: < 2300 grams",
-        "A large amount of sodium in the diet can cause high blood pressure, leading to an increased risk of cardiovascular" + 
+        "Recommended daily intake: < 2.3 grams",
+        "A large amount of sodium in the diet can cause high blood pressure, leading to an increased risk of cardiovascular " + 
         "disease and stroke. The high sodium content in food is 1.5g per 100g, and the low salt content is 0.3g per 100g. " + 
         "Always try to choose the lower product in sodium.\n\n" +
         "Recommended daily intake: < 2.3 grams"]
