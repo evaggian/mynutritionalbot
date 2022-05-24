@@ -87,10 +87,10 @@ def get_fat_scenario(user_NL_level):
     elif user_NL_level == 3: 
         scenarios = ["Fats are macronutrients that, like carbohydrates, provide energy. " + 
         "Per gram, they provide more energy than carbohydrates and thus serve as energy stores in the body.\n\n" + 
-        "Recommended intake: 20-35% of total energy.",
+        "Recommended intake: 20-35% of total daily energy.",
         "Fats are macros that provide energy. When energy intake is higher than consumption, " + 
         "fat accumulates and promotes the development of obesity.\n\n"
-        "The recommended intake is 20-35% of total energy."]
+        "The recommended intake is 20-35% of total daily energy."]
 
         return random.choice(scenarios)    
 
@@ -132,10 +132,11 @@ def get_sugar_scenario(user_NL_level):
 
 def get_sodium_scenario(user_NL_level):
     if user_NL_level == 1: 
-        scenarios =  ["Sodium affects blood pressure, leading to heart problems in the long term. \n\n" + 
+        scenarios =  ["Salt affects blood pressure, leading to heart problems in the long term. \n\n" + 
         "Sausages, snacks, fast food (e.g., French fries), and ready-made products (e.g., frozen pizza) have a lot of salt added.\n\n" +
         "It is recommended to consume it in small quantities daily.",
-        "Sodium is found almost everywhere in the diet, so if you’re keeping an eye on your sodium counter, you probably know you don't need to eat salt to go extreme on your sodium levels.\n\n" + 
+        "Salt is found almost everywhere in the diet, so if you're keeping an eye on your salt counter, " + 
+        "you probably know you don't need to eat salt to go extreme on your salt levels.\n\n" + 
         "Sausages, snacks, fast food (e.g., French fries), and ready-made products (e.g., frozen pizza) have a lot of salt added.\n\n" + 
         "It is recommended to consume it in small quantities daily.",]
 
@@ -144,22 +145,22 @@ def get_sodium_scenario(user_NL_level):
     elif user_NL_level == 2: 
         scenarios =  ["The sodium content of salt is needed to regulate the amount of water in our bodies. \n\n" + 
         "However, sodium affects blood pressure, leading to cardiovascular problems in the long term. " + 
-        "Recommended daily intake: < 3750 grams",
-        "Sodium is found almost everywhere in the diet, so if you’re keeping an eye on your sodium counter, " + 
-        "you probably know you don’t need to eat salt to go overboard on your sodium levels.\n\n" +
+        "Recommended daily intake: < 2300 grams",
+        "Sodium is found almost everywhere in the diet, so if you're keeping an eye on your sodium counter, " + 
+        "you probably know you don't need to eat salt to go overboard on your sodium levels.\n\n" +
         "Sausages, snacks, fast food (e.g., French fries), and ready-made products (e.g., frozen pizza) have a lot of salt added.\n\n" + 
-        "Recommended intake: < 3750 grams"]
+        "Recommended daily intake: < 2300 grams"]
 
         return random.choice(scenarios)
 
     elif user_NL_level == 3: 
         scenarios =  ["The sodium content of salt is needed to regulate the amount of water in our body, " + 
         "transmit signals from the nerves, and move the muscles. However, sodium intake is usually higher than recommended.\n\n" +
-        "Recommended daily intake: < 3750 grams",
+        "Recommended daily intake: < 2300 grams",
         "A large amount of sodium in the diet can cause high blood pressure, leading to an increased risk of cardiovascular" + 
         "disease and stroke. The high sodium content in food is 1.5g per 100g, and the low salt content is 0.3g per 100g. " + 
-        "Always try to choose the lower salt product.\n\n" +
-        "Recommended intake: < 3750 grams"]
+        "Always try to choose the lower product in sodium.\n\n" +
+        "Recommended daily intake: < 2.3 grams"]
 
         return random.choice(scenarios)
 
