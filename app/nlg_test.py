@@ -1,4 +1,4 @@
-from nlg import *
+from nlg import get_overview_text, get_specific_nutrient_stats, replace_nutrient
 
 
 #def test_gett_overview_text_no_entries()
@@ -22,28 +22,35 @@ def test_get_overview_text_lvl_1_good():
 
     assert result in (r1, r2)
 
-"""def test_get_overview_text_lvl_1_bad():
+
+def test_get_overview_text_lvl_1_bad(mocker):
+
+    mocker.patch('nlg.get_food_examples', return_value='potatoes')
     user_NL_level = 1
     user_first_name = "Test"
     user_date_stats = {'calories': [2078.0, 1720.0, -358.0], 'carbohydrates': [171.0, 215.0, 44.0], 'fat': [89.0, 57.0, -32.0], 'protein': [141.0, 86.0, -55.0], 'sodium': [98.0, 2300.0, 2202.0], 'sugar': [37.0, 65.0, 28.0]}
 
     result = get_overview_text(user_NL_level, user_first_name, user_date_stats)
 
-    r1 = "So, the good news is that salt and carbohydrates are around the recommended intake. 🎉🎉\n\\n" \
+    r1 = "So, the good news is that salt and carbohydrates are around the recommended intake. 🎉🎉\n\n" \
         + "However, you should consider cutting down on protein and fat, as it will not help you achieve your goal.\n\n" \
-        + "How about eating less fruits like apples, bananas, pears, peaches and less " \
-        + "fruits like apples, bananas, pears, peaches?\n\n" \
+        + "How about eating less potatoes and less potatoes?\n\n" \
         + "Would you like to ask something more?"
 
     r2 = "Well, Test, calorie-wise, you are higher than your target.\n" \
         + "Salt and carbohydrates are kept on a good level.\n\n" \
-        + "However, your protein and fat intake needs a bit of work.\n" \
-        + "You could consider eating less" \
-        + "fruits like apples, bananas, pears, peaches and  less" \
-        + "fruits like apples, bananas, pears, peaches.\n\n" \
+        + "However, your protein and fat intake needs a bit of improvement.\n" \
+        + "You could consider eating less potatoes and less potatoes.\n\n" \
         + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
 
-    assert result in (r1, r2)"""
+    r3 = "Well, Test, calorie-wise, you are higher than your target.\n" \
+        + "Salt and carbohydrates are kept on a good level.\n\n" \
+        + "However, your protein and fat intake needs a bit of work.\n" \
+        + "You could consider eating less potatoes and less potatoes.\n\n" \
+        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+
+    assert result in (r1, r2, r3)
+
 
 def test_get_overview_text_lvl_2_good():
     user_NL_level = 2
@@ -67,6 +74,7 @@ def test_get_overview_text_lvl_2_good():
 #def test_get_overview_text_lvl_2_bad():
 # [TO-DO]: write this test
 
+
 def test_get_overview_text_lvl_3_good():
     user_NL_level = 3
     user_first_name = "Test"
@@ -89,6 +97,7 @@ def test_get_overview_text_lvl_3_good():
 #def test_get_overview_text_lvl_3_bad():
 # [TO-DO]: write this test
 
+
 def test_get_specific_stats_lvl_1_good():
     nutrient_list = ["protein"]
     user_NL_level = 1
@@ -101,7 +110,8 @@ def test_get_specific_stats_lvl_1_good():
     r2 = "It looks good. Keep it up 😀\n\n" \
         + "Anything else I can help with?"
         
-    assert result in (r1,r2)
+    assert result in (r1, r2)
+
 
 def test_get_specific_stats_lvl_2_good():
     nutrient_list = ["protein"]
@@ -116,7 +126,8 @@ def test_get_specific_stats_lvl_2_good():
     r2 = "It looks good. Keep it up 😀\n\n" \
         + "Anything else I can help with?"
 
-    assert result in (r1,r2) 
+    assert result in (r1, r2)
+
 
 def test_get_specific_stats_lvl_3_good():
     nutrient_list = ["protein"]
@@ -132,13 +143,13 @@ def test_get_specific_stats_lvl_3_good():
         + "Looks good! Keep it up 😀\n\n" \
         + "Anything else I can help with?"
 
-    assert result in (r1,r2) 
+    assert result in (r1, r2)
 
 
 def test_replace_nutrient():
     errors = []
 
-    text_1 = replace_nutrient("sodium" , 1)
+    text_1 = replace_nutrient("sodium", 1)
     text_2 = replace_nutrient("sodium", 2)
     text_3 = replace_nutrient("sodium", 3)
     text_4 = replace_nutrient("Sodium", 1)
@@ -155,7 +166,6 @@ def test_replace_nutrient():
         errors.append("failed test - text_4")
     if not "Sodium" == text_5:
         errors.append("failed test - text_5")
-    
 
     # assert no error message has been registered, else print messages
     assert not errors, "errors occured:\n{}".format("\n".join(errors))

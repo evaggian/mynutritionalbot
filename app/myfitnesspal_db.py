@@ -5,16 +5,19 @@ import database_config as cfg
 
 client = myfitnesspal.Client(username=cfg.mfp["username"], password=cfg.mfp["password"])
 
+
 # compare current and goal nutrient and return the remainder in a dict
 def calculate_remainder(totals, goals):
     remainder = {key: round(goals[key] - totals.get(key, 0), 1) 
-            for key in goals}
+        for key in goals}
     return remainder
+
 
 # calculate the daterange between 2 dates given
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days) + 1):
         yield start_date + timedelta(n)
+
 
 # calculate the food with the top nutrient among the entries in MFP
 def get_top_food(meals, nutrient):
@@ -23,16 +26,17 @@ def get_top_food(meals, nutrient):
     if meals:
         for meal in meals:          # meal={breakfast, lunch, dinner, snacks}
             for entry in meal:      # for every entry of this meal
-                    if (entry.totals[nutrient]) > top:
-                        top = entry.totals[nutrient]
-                        top_food = entry.name
+                if (entry.totals[nutrient]) > top:
+                    top = entry.totals[nutrient]
+                    top_food = entry.name
 
-        if top_food == None: 
+        if top_food is None:
             return None
         else:
-            return({top_food:top})  # return a dictionary with key the name of the food,
-                                    # and value the top value of the nutrient requested
+            return({top_food: top})     # return a dictionary with key the name of the food,
+                                        # and value the top value of the nutrient requested
     return None
+
 
 # calculate the food with the lowest nutrient among the entries in MFP
 def get_low_food(meals, nutrient):
@@ -41,20 +45,21 @@ def get_low_food(meals, nutrient):
     if meals:
         for meal in meals:          # meal={breakfast, lunch, dinner, snacks}
             for entry in meal:      # for every entry of this meal
-                    if (entry.totals[nutrient]) < low:
-                        low = entry.totals[nutrient]
-                        low_food = entry.name
+                if (entry.totals[nutrient]) < low:
+                    low = entry.totals[nutrient]
+                    low_food = entry.name
 
-        if low_food == None: 
+        if low_food is None:
             return None
         else:
-            return({low_food:low})  # return a dictionary with key the name of the food,
-                                    # and value the lowest value of the nutrient requested
+            return({low_food: low})     # return a dictionary with key the name of the food,
+                                        # and value the lowest value of the nutrient requested
     return None
 
+
 # from a list of top food, find and return the toppest food by value
-def get_top_food_list(top_food_list):          
-    top = 0 
+def get_top_food_list(top_food_list):        
+    top = 0
     top_food = None
     if top_food_list:                                   # if the list is not empty
         for index in range(len(top_food_list)):         # find the food with the highest nutrient value and return it
@@ -65,9 +70,10 @@ def get_top_food_list(top_food_list):
         return(top_food)
     return None
 
+
 # from a list of low food, find and return the lowest food by value
-def get_low_food_list(low_food_list):       
-    low = 100000 
+def get_low_food_list(low_food_list):     
+    low = 100000
     low_food = None
     if low_food_list:                               # if the list is not empty
         for index in range(len(low_food_list)):     # find the food with the lowest nutrient value and return it
@@ -75,18 +81,19 @@ def get_low_food_list(low_food_list):
                 if low_food_list[index][key] < low:
                     low = low_food_list[index][key]
                     low_food = low_food_list[index]
-        return(low_food)    
-    return None 
+        return(low_food)
+    return None
+
 
 # for the time range given, call get_top_food or get_low_food and return the information requested
 def get_food_info(user_name, date_input, nutrient, volume):
     print("REQUESTS DATA FOR: " + user_name, date_input, nutrient, volume)
-    
+  
     if len(date_input) == 1:        # if there is only one date specificed
         friend_current_stats = client.get_date(date_input[0].year, date_input[0].month, date_input[0].day, username=user_name)  #retrieve the information from MFP
-         
+
         if not friend_current_stats.meals:      # if the profile is private, return error message
-            return -1    
+            return -1 
 
         if volume == "TOP":
             meals = friend_current_stats.meals
@@ -110,7 +117,7 @@ def get_food_info(user_name, date_input, nutrient, volume):
         # for every day between 2 dates, retrieve totals + goals and sum them up
         for single_date in daterange(date_input[0], date_input[1]):
             friend_current_stats = client.get_date(single_date.strftime("%Y"), single_date.strftime("%m"), single_date.strftime("%d"), username=user_name)
-            
+
             if not friend_current_stats.meals:      # if the profile is private, return error message
                 return -1
 
@@ -122,7 +129,7 @@ def get_food_info(user_name, date_input, nutrient, volume):
 
             elif volume == "LOW":
                 meals = friend_current_stats.meals
-                low_food = get_low_food(meals, nutrient)        
+                low_food = get_low_food(meals, nutrient)       
                 if low_food:                                   # if there is a food entry, add it to the list
                     low_food_list.append(low_food)
 
@@ -130,6 +137,7 @@ def get_food_info(user_name, date_input, nutrient, volume):
             return get_top_food_list(top_food_list)
         elif volume == "LOW":
             return get_low_food_list(low_food_list)
+
 
 # retrieve totals, goals and remainder stats (5 nutrients + calories)
 def get_date_stats(user_name, date_input, insight):
@@ -163,8 +171,8 @@ def get_date_stats(user_name, date_input, insight):
         print(date_input[1])
 
         # initialize dictionaries with 0
-        totals = dict.fromkeys(['calories','carbohydrates','fat','protein','sodium','sugar'], 0)
-        goals = dict.fromkeys(['calories','carbohydrates','fat','protein','sodium','sugar'], 0)
+        totals = dict.fromkeys(['calories', 'carbohydrates', 'fat', 'protein', 'sodium', 'sugar'], 0)
+        goals = dict.fromkeys(['calories', 'carbohydrates', 'fat', 'protein', 'sodium','sugar'], 0)
         no_entries = 0
 
         # for every day between 2 dates, retrieve totals + goals and sum them up
@@ -174,11 +182,11 @@ def get_date_stats(user_name, date_input, insight):
             if not friend_current_stats.meals:      # if the profile is private, return error message
                 return -1
 
-            totals = {key: friend_current_stats.totals.get(key, 0) + totals.get(key, 0) 
+            totals = {key: friend_current_stats.totals.get(key, 0) + totals.get(key, 0)
             for key in set(friend_current_stats.totals) | set(totals)}
 
             # calculate how many days we have entries for
-            if( friend_current_stats.totals.get("calories") != None):
+            if friend_current_stats.totals.get("calories") is not None:
                 no_entries += 1
 
             goals = {key: friend_current_stats.goals.get(key, 0) + goals.get(key, 0)
@@ -194,7 +202,7 @@ def get_date_stats(user_name, date_input, insight):
             for key in set(totals)}
 
             # calculate average goals among the duration of days and round it to 1 digit 
-            avg_goals = {key: round(goals.get(key, 0) / int((date_input[1] - date_input[0]).days + 1), 1)        
+            avg_goals = {key: round(goals.get(key, 0) / int((date_input[1] - date_input[0]).days + 1), 1)      
                 for key in set(goals)}
 
             # calculate average remainder
@@ -204,7 +212,7 @@ def get_date_stats(user_name, date_input, insight):
 
             for stat in (avg_totals, avg_goals, avg_remainder):
                 for key, value in stat.items():
-                    stats[key].append(value) 
+                    stats[key].append(value)
 
             print(stats)
             return stats

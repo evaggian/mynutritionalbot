@@ -8,6 +8,7 @@ from datetime import date
 
 client = Client(cfg.twilio["account_sid"], cfg.twilio["auth_token"])
 
+
 # retrieve the chat history of a user based on the user_name and phone_number provided
 def retrieve_chat_history(user_name, phone_number):
     messages = client.messages.list(
@@ -35,6 +36,3 @@ def retrieve_chat_history(user_name, phone_number):
     print(chat_list)
     print("--------")
     return chat_list
-
-
-

@@ -1,22 +1,23 @@
 import random
 
-from app.myfitnesspal_db import *
-from app.nlg_helper import *
+from app.myfitnesspal_db import get_date_stats 
+from app.nlg_helper import get_bad_nutr, get_good_nutr, get_calories, get_food_examples, replace_nutrient, get_food_group_examples_less, get_food_group_examples_more, get_grams, get_volume_adjective, get_volume_adjective_reverse, get_percentage
 
-def inform_overview(nutrient_list, date_list , insight, user_NL_level, user_name, user_first_name):
 
-    user_date_stats = get_date_stats(user_name ,date_list ,insight)     # retrieve all stats of the requuested date
+def inform_overview(nutrient_list, date_list, insight, user_NL_level, user_name, user_first_name):
+
+    user_date_stats = get_date_stats(user_name, date_list, insight)     # retrieve all stats of the requuested date
 
     if user_date_stats == -1:       # if the profile is private, return error message
         return -1
-    elif user_date_stats == None:   # there are no entries for the date specified
+    elif user_date_stats is None:   # there are no entries for the date specified
         return None
-
 
     if not nutrient_list:
         return get_overview_text(user_NL_level, user_first_name, user_date_stats)   # return nlg text - overview
     else:
-        return get_specific_nutrient_stats(nutrient_list , user_NL_level, user_date_stats)  # return nlg text - specific nutrient
+        return get_specific_nutrient_stats(nutrient_list, user_NL_level, user_date_stats)  # return nlg text - specific nutrient
+
 
 def get_overview_text(user_NL_level, user_first_name, user_date_stats):
     good_nutr = get_good_nutr(user_date_stats)      # retrieve top 2 nutrient data that have positive values
@@ -57,7 +58,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + random.choice(["of work", "of improvement"]) \
             + ".\nYou could consider eating" \
             + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and " \
-            + " less " + get_food_examples(list(bad_nutr.keys())[1]) + ".\n\n" \
+            + "less " + get_food_examples(list(bad_nutr.keys())[1]) + ".\n\n" \
             +  "Is everything clear to you? Do you have any further questions you'd like to ask me?"
 
             scenario_2 = "So, the good news is that " \

@@ -4,8 +4,9 @@ from app.date import get_date
 from twilio.twiml.messaging_response import MessagingResponse
 from app.myfitnesspal_db import get_food_info
 from app.nlp_nutrientsInfo import get_more_info
-from app.user_info_db import *
-from app.nlg import *
+from app.user_info_db import initialize_db, user_exists, first_time, get_user_first_name, update_first_time, get_NL_level
+from app.nlg import get_first_time_user_text, get_food_info_nlg, inform_overview
+import random
 
 app = Flask(__name__)
 

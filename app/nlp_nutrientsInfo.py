@@ -1,5 +1,6 @@
 import random
 
+
 def get_protein_scenario(user_NL_level):
     if user_NL_level == 1:
         scenarios = ["Protein is a crucial part of every cell in our bodies.\n\n" + 
@@ -33,7 +34,8 @@ def get_protein_scenario(user_NL_level):
         "Recommended intake: 10-35% of total daily energy."]
 
         return random.choice(scenarios)
-    
+
+
 def get_carb_scenario(user_NL_level):
     if user_NL_level == 1:
         scenarios = ["Our bodies need carbs, particularly glucose, since it's the preferred fuel for tissues and organs to perform essential functions.\n\n" + 
@@ -64,6 +66,7 @@ def get_carb_scenario(user_NL_level):
 
         return random.choice(scenarios)
 
+
 def get_fat_scenario(user_NL_level):
     if user_NL_level == 1: 
         scenarios = ["A healthy amount of fat protects our cells, blood, and brain.\n\n" + 
@@ -93,6 +96,7 @@ def get_fat_scenario(user_NL_level):
         "The recommended intake is 20-35% of total daily energy."]
 
         return random.choice(scenarios)    
+
 
 def get_sugar_scenario(user_NL_level):
     if user_NL_level == 1: 
@@ -163,7 +167,6 @@ def get_sodium_scenario(user_NL_level):
         "Recommended daily intake: < 2.3 grams"]
 
         return random.choice(scenarios)
-
 
 
 def get_more_info(nutrient_list, user_NL_level):
