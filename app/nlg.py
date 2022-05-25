@@ -122,7 +122,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + str(good_nutr[list(good_nutr.keys())[1]][1]) \
             + get_grams(list(good_nutr.keys())[1]) + ") are around the recommended intake. 🎉🎉\n\nHowever, you should consider cutting down on " \
             + list(bad_nutr.keys())[0] + " and " \
-            + list(bad_nutr.keys())[1] + " , as it will not help you achieve your goal. How about eating " \
+            + list(bad_nutr.keys())[1] + " , as it will not help you achieve your goal. How about eating" \
             + " more " + get_food_group_examples_less(list(bad_nutr.keys())[0]) + " and" \
             + " more " + get_food_group_examples_less(list(bad_nutr.keys())[1]) + " for a healthy diet?\n\nWould you like to ask something more?"
 
@@ -191,7 +191,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + str(bad_nutr[list(bad_nutr.keys())[0]][0]) \
             + get_grams(list(bad_nutr.keys())[0]) + ") and " \
             + list(bad_nutr.keys())[1] + "(" \
-            + str(bad_nutr[list(bad_nutr.keys())[0]][1]) \
+            + str(bad_nutr[list(bad_nutr.keys())[1]][0]) \
             + get_grams(list(bad_nutr.keys())[1]) + ") intake exceeded the recommended intake (" \
             + str(bad_nutr[list(bad_nutr.keys())[0]][0])  + "/ " \
             + str(bad_nutr[list(bad_nutr.keys())[0]][1]) \
@@ -208,18 +208,19 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + str(good_nutr[list(good_nutr.keys())[0]][0]) \
             + get_grams(list(good_nutr.keys())[0]) + " of " \
             + list(good_nutr.keys())[0] + " and " \
-            + str(good_nutr[list(good_nutr.keys())[1]][0]) + " of " \
-            + list(good_nutr.keys())[1] \
-            + get_grams(list(good_nutr.keys())[1]) + " which are around the recommended intake (" \
             + str(good_nutr[list(good_nutr.keys())[1]][0]) \
+            + get_grams(list(good_nutr.keys())[1]) + " of " \
+            + list(good_nutr.keys())[1] \
+            + " which are around the recommended intake (" \
+            + str(good_nutr[list(good_nutr.keys())[0]][1]) \
             + get_grams(list(good_nutr.keys())[0]) + " and " \
             + str(good_nutr[list(good_nutr.keys())[1]][1]) \
             + get_grams(list(bad_nutr.keys())[1]) + " for each) 🔝.\n\nHowever, you should consider cutting down on " \
             + list(bad_nutr.keys())[0] + " and " \
             + list(bad_nutr.keys())[1] + ", as you had an additional " \
-            + str(bad_nutr[list(bad_nutr.keys())[0]][2]) \
+            + str(abs(bad_nutr[list(bad_nutr.keys())[0]][2])) \
             + get_grams(list(bad_nutr.keys())[0]) + " and " \
-            + str(bad_nutr[list(bad_nutr.keys())[1]][2]) \
+            + str(abs(bad_nutr[list(bad_nutr.keys())[1]][2])) \
             + get_grams(list(bad_nutr.keys())[1]) + " of them, and it will not help you achieve your goal.\n\nWould you like to ask something more?"
 
 
@@ -342,11 +343,11 @@ def get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input):   
     print(list( food_info.values())[0])
     if user_NL_level == 1:
         scenario_1 = "Of the foods you ate, " \
-        + list(food_info.keys())[0] + " was the " \
+        + list(food_info.keys())[0] + " was the" \
         + get_volume_adjective(volume_input) \
         + "in " \
         + nutrient_list[0] \
-        + ". Why don't you substitute it with " \
+        + ". Why don't you substitute it with" \
         + get_volume_adjective_reverse(volume_input) \
         + get_food_examples(nutrient_list[0]) \
         + "?"
@@ -370,31 +371,30 @@ def get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input):   
 
         scenario_1 = "Of the foods you ate, " \
         + list(food_info.keys())[0] \
-        + " had the " \
+        + " had the" \
         + get_volume_adjective(volume_input) \
         + nutrient_list[0] \
         + " (" \
         + str(list( food_info.values())[0]) + get_grams(nutrient_list[0]) \
         + "). Why don't you substitute it with" \
         + get_volume_adjective_reverse(volume_input) \
-        + "of " \
-        + food_group_example
+        + food_group_example + "?"
 
         scenario_2 = list(food_info.keys())[0] \
         + " with " \
         + str(list( food_info.values())[0]) + get_grams(nutrient_list[0]) \
         + " of " \
         + nutrient_list[0] \
-        + ". I know that changing what you eat is hard but consider your goal. You could try shifting your balance to eating " \
+        + ". I know that changing what you eat is hard but consider your goal. You could try shifting your balance to eating" \
         + get_volume_adjective_reverse(volume_input) \
-        + food_group_example
+        + food_group_example + "?"
 
         return random.choice([replace_nutrient(scenario_1, user_NL_level), replace_nutrient(scenario_2, user_NL_level)])
 
     elif user_NL_level == 3: 
         scenario_1 = "Of the foods you ate, " \
         + list(food_info.keys())[0] \
-        + " was the " \
+        + " was the" \
         + get_volume_adjective(volume_input) \
         + "in " \
         + nutrient_list[0] \

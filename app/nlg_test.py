@@ -1,8 +1,5 @@
-from nlg import get_overview_text, get_specific_nutrient_stats, replace_nutrient
+from nlg import get_overview_text, get_specific_nutrient_stats, replace_nutrient, get_food_info_nlg
 
-
-#def test_gett_overview_text_no_entries()
-# [TO-DO: write this test]
 
 def test_get_overview_text_lvl_1_good():
     user_NL_level = 1
@@ -63,7 +60,7 @@ def test_get_overview_text_lvl_2_good():
         + "Similarly, your fat (0.0/57.0 grams) and sugar (0.0/65.0 grams) are good and can help you achieve your goal.\n\n" \
         + "Would you like to ask something more?"
 
-    r2 = "Well, Test, calorie-wise, you are -90% lower than your target. Good job! 🔝\n\n" \
+    r2 = "Well, Test, calorie-wise, you are 90% lower than your target. Good job! 🔝\n\n" \
         + "Sodium and carbohydrates are kept on a good level.\n\n" \
         + "Same for your fat and sugar intake.\n\n" \
         + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
@@ -71,8 +68,34 @@ def test_get_overview_text_lvl_2_good():
     assert result in (r1, r2)
 
 
-#def test_get_overview_text_lvl_2_bad():
-# [TO-DO]: write this test
+def test_get_overview_text_lvl_2_bad(mocker):
+
+    mocker.patch('nlg.get_food_group_examples_less', return_value='fruits')
+    user_NL_level = 2
+    user_first_name = "Test"
+    user_date_stats = {'calories': [2078.0, 1720.0, -358.0], 'carbohydrates': [171.0, 215.0, 44.0], 'fat': [89.0, 57.0, -32.0], 'protein': [141.0, 86.0, -55.0], 'sodium': [98.0, 2300.0, 2202.0], 'sugar': [37.0, 65.0, 28.0]}
+
+    result = get_overview_text(user_NL_level, user_first_name, user_date_stats)
+
+    r1 = "So, the good news is that sodium (98.0/2300.0 mgrams) and carbohydrates (171.0/215.0 grams) " \
+        + "are around the recommended intake. 🎉🎉\n\n" \
+        + "However, you should consider cutting down on protein and fat , " \
+        + "as it will not help you achieve your goal. How about eating more fruits and more fruits for a healthy diet?\n\n" \
+        + "Would you like to ask something more?"
+
+    r2 = "Well, Test, calorie-wise, you are 21% higher than your target.\n\n" \
+        + "Sodium and carbohydrates are kept on a good level.\n\n" \
+        + "However, your protein and fat intake needs a bit of improvement. " \
+        + "You could consider eating more fruits and more fruits.\n\n" \
+        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+
+    r3 = "Well, Test, calorie-wise, you are 21% higher than your target.\n\n" \
+        + "Sodium and carbohydrates are kept on a good level.\n\n" \
+        + "However, your protein and fat intake needs a bit of work. " \
+        + "You could consider eating more fruits and more fruits.\n\n" \
+        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+
+    assert result in (r1, r2, r3)
 
 
 def test_get_overview_text_lvl_3_good():
@@ -87,15 +110,37 @@ def test_get_overview_text_lvl_3_good():
         + "Similarly, your fat (0.0/57.0 grams) and sugar (0.0/65.0 grams) are good and can help you achieve your goal.\n\n" \
         + "Would you like to ask something more?"
 
-    r2 = "Well, Test, calorie-wise, you are -90% lower than your target. Good job! 🔝\n\n" \
+    r2 = "Well, Test, calorie-wise, you are 90% lower than your target. Good job! 🔝\n\n" \
         + "You had 0.0 out of 2300.0 mgrams of sodium and 14.0 out of 215.0 grams of carbohydrates which is great!\n\n" \
         + "Same for your fat and sugar intake (0.0/ 57.0 grams and 0.0/ 65.0 grams respectively).\n\n" \
         + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
 
     assert result in (r1, r2)
 
-#def test_get_overview_text_lvl_3_bad():
-# [TO-DO]: write this test
+
+def test_get_overview_text_lvl_3_bad(mocker):
+
+    mocker.patch('nlg.get_food_group_examples_less', return_value='fruits')
+    user_NL_level = 3
+    user_first_name = "Test"
+    user_date_stats = {'calories': [2078.0, 1720.0, -358.0], 'carbohydrates': [171.0, 215.0, 44.0], 'fat': [89.0, 57.0, -32.0], 'protein': [141.0, 86.0, -55.0], 'sodium': [98.0, 2300.0, 2202.0], 'sugar': [37.0, 65.0, 28.0]}
+
+    result = get_overview_text(user_NL_level, user_first_name, user_date_stats)
+
+    r1 = "Well, Test, calorie-wise, you are 21% higher than your target.\n\n" \
+        + "You had 98.0 out of 2300.0 mgrams of sodium and 171.0 out of 215.0 grams of carbohydrates which is great!\n\n" \
+        + "However, your protein(141.0 grams) and fat(89.0 grams) intake exceeded the recommended intake " \
+        + "(141.0/ 86.0 grams and 89.0/ 57.0 grams respectively). You could consider cutting down on these.\n\n" \
+        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+
+    r2 = "So the good news is that sodium and carbohydrates are on target.\n\n" \
+        + "You had 98.0 mgrams of sodium and 171.0 grams of carbohydrates which are around the recommended intake " \
+        + "(2300.0 mgrams and 215.0 grams for each) 🔝.\n\n" \
+        + "However, you should consider cutting down on protein and fat, as you had an additional 55.0 grams and 32.0 grams of them," \
+        + " and it will not help you achieve your goal.\n\n" \
+        + "Would you like to ask something more?"
+
+    assert result in (r1, r2)
 
 
 def test_get_specific_stats_lvl_1_good():
@@ -169,3 +214,65 @@ def test_replace_nutrient():
 
     # assert no error message has been registered, else print messages
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
+
+
+def test_get_top_food_info_nlg_lvl_1(mocker):
+
+    mocker.patch('nlg.get_food_examples', return_value='fruits')
+
+    food_info = {'Coles lamp rump steaks - Lamp steak, 1 steak': 47.0}
+    user_NL_level = 1
+    nutrient_list = ["protein"]
+    volume_input = "TOP"
+
+    result = get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input)
+
+    r1 = "Of the foods you ate, Coles lamp rump steaks - Lamp steak, 1 steak was the " \
+        + "highest in protein. Why don't you substitute it with less fruits?"
+
+    r2 = "Coles lamp rump steaks - Lamp steak, 1 steak. I know that changing what you " \
+        + "eat is hard but consider your goal. You could try eating something with less " \
+        + "protein next time, such as fruits."
+
+    assert result in (r1, r2)
+
+
+def test_get_top_food_info_nlg_lvl_2(mocker):
+
+    mocker.patch('nlg.get_food_group_examples_less', return_value='fruits')
+
+    food_info = {'Coles lamp rump steaks - Lamp steak, 1 steak': 47.0}
+    user_NL_level = 2
+    nutrient_list = ["protein"]
+    volume_input = "TOP"
+
+    result = get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input)
+
+    r1 = "Of the foods you ate, Coles lamp rump steaks - Lamp steak, 1 steak had the highest protein (47.0 grams)." \
+        + " Why don't you substitute it with less fruits?"
+
+    r2 = "Coles lamp rump steaks - Lamp steak, 1 steak with 47.0 grams of protein." \
+        + " I know that changing what you eat is hard but consider your goal." \
+        + " You could try shifting your balance to eating less fruits?"
+
+    assert result in (r1, r2)
+
+
+def test_get_top_food_info_nlg_lvl_3(mocker):
+
+    mocker.patch('nlg.get_food_examples', return_value='fruits')
+
+    food_info = {'Coles lamp rump steaks - Lamp steak, 1 steak': 47.0}
+    user_NL_level = 3
+    nutrient_list = ["protein"]
+    volume_input = "TOP"
+
+    result = get_food_info_nlg(food_info, user_NL_level, nutrient_list, volume_input)
+
+    r1 = "Of the foods you ate, Coles lamp rump steaks - Lamp steak, 1 steak" \
+        + " was the highest in protein with 47.0 grams."
+
+    r2 = "Coles lamp rump steaks - Lamp steak, 1 steak with 47.0 grams of protein." \
+        + " I know that changing what you eat is hard but consider your goal."
+
+    assert result in (r1, r2)

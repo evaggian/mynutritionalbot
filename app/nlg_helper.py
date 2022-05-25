@@ -17,12 +17,12 @@ def get_calories(calories_dic, user_NL_level):
         if user_NL_level == 1:
             text = "higher than your target."
         elif user_NL_level == 2 or user_NL_level == 3:
-            text = str(percentage) + "% higher than your target."
+            text = str(abs(percentage)) + "% higher than your target."
     else:
         if user_NL_level == 1:
             text = "lower than your target. Good job! 🔝" 
         elif user_NL_level == 2 or user_NL_level == 3:
-            text = str(percentage) + "% lower than your target. Good job! 🔝" 
+            text = str(abs(percentage)) + "% lower than your target. Good job! 🔝" 
 
     return text
 
