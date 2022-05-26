@@ -61,6 +61,7 @@ pytz-deprecation-shim==0.1.0.post0
 regex==2022.3.2
 requests==2.27.1
 rich==9.13.0
+schedule==1.1.0
 six==1.16.0
 smart-open==5.2.1
 spacy==3.2.3
