@@ -25,7 +25,6 @@ def bot():
 
     # check if the user exists in the db based on the phone_number taken from Twilio
     user_name = user_exists(request.values.get('From')[-13:])
-    #user_name = "evaggiab"         #enable this only for testing of NL_level 3
 
     if not user_name:
         msg = resp.message()
@@ -51,6 +50,8 @@ def bot():
     volume = "TOP"
     more_info_requested = False
     food_info_requested = False
+    clarification = False
+    goodbye = False
     
     if ner_input:
         print(ner_input)
@@ -117,6 +118,12 @@ def bot():
                     volume = "TOP"
                 elif volume_low:
                     volume = "LOW"
+            
+            if ent.label_ == "CLARIFICATION":
+                clarification = ent.text
+
+            if ent.label_ == "GREETING_GOODBYE":
+                goodbye = True
 
         if not date_list:                 #if the user didn't specify for which date, show him info for today
             date = get_date("today")
@@ -149,13 +156,13 @@ def bot():
 
         user_NL_level = get_NL_level(user_name)
 
-        if (more_info_requested):                               # scenario D - inform extra food info
+        if more_info_requested:                               # scenario D - inform extra food info
             text = get_more_info(nutrient_list, user_NL_level)
             print(text)
 
             msg = resp.message()
             msg.body(text)
-        elif (food_info_requested):                            # scenario C - inform food consumption
+        elif food_info_requested:                            # scenario C - inform food consumption
             print("date_list:", date_list)
             if not nutrient_list:                   # if no nutrient was specified, set nutrient_list to 'calories'
                 nutrient_list.append("calories")
@@ -175,7 +182,17 @@ def bot():
             msg = resp.message()
             msg.body(text)
 
-        else:               
+        elif clarification:             # if the user answered that he doesn't want to ask sth more
+            if "no" in clarification:   # if the user typed 'no'
+                msg = resp.message()    
+                msg.body("Cool 😎 Well, if you change your mind I'll be around.")          # if the user typed 'yes', it is expected that
+                                                                                            # there will be a follow-up question
+                                                                                            # so the chatbot is on hold
+        elif goodbye:                                                                       
+                text = "Ok bye for now!"
+                msg = resp.message()
+                msg.body(text)
+        else:            
             msg = resp.message()          
             msg.body("Let me check that for you...")           # scenario A & B - inform overview, inform specific nutrient stats
             
@@ -193,5 +210,6 @@ def bot():
 
         responded = True
     if not responded:
+        msg = resp.message()
         msg.body("I don't quite understand that. Can you repeat it please?")
     return str(resp)

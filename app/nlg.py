@@ -40,7 +40,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + list(good_nutr.keys())[1]  + " are kept on a good level.\nSame for your " \
             + list(bad_nutr.keys())[0]  + " and " \
             + list(bad_nutr.keys())[1] + " intake.\n\n" \
-            +  "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+            +  "Do you have any further questions you'd like to ask me?"
 
             scenario_2 = "So, the good news is that " \
             + list(good_nutr.keys())[0] + " and " \
@@ -59,7 +59,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + ".\nYou could consider eating" \
             + " less " + get_food_examples(list(bad_nutr.keys())[0]) + " and " \
             + "less " + get_food_examples(list(bad_nutr.keys())[1]) + ".\n\n" \
-            +  "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+            +  "Do you have any further questions you'd like to ask me?"
 
             scenario_2 = "So, the good news is that " \
             + list(good_nutr.keys())[0] + " and " \
@@ -79,7 +79,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + list(good_nutr.keys())[1] + " are kept on a good level.\n\nSame for your " \
             + list(bad_nutr.keys())[0] + " and " \
             + list(bad_nutr.keys())[1] + " intake.\n\n" \
-            +  "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+            +  "Do you have any further questions you'd like to ask me?"
 
             scenario_2 = "So, the good news is that " \
             + list(good_nutr.keys())[0] + " (" \
@@ -110,7 +110,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + ". You could consider eating" \
             + " more " + get_food_group_examples_less(list(bad_nutr.keys())[0]) + " and" \
             + " more " + get_food_group_examples_less(list(bad_nutr.keys())[1]) + ".\n\n" \
-            +  "Is everything clear to you? Do you have any further questions you'd like to ask me?"""
+            +  "Do you have any further questions you'd like to ask me?"""
 
             scenario_2 = "So, the good news is that " \
             + list(good_nutr.keys())[0] + " (" \
@@ -150,7 +150,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + str(bad_nutr[list(bad_nutr.keys())[1]][1]) \
             + get_grams(list(bad_nutr.keys())[1]) \
             + " respectively).\n\n" \
-            + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+            + "Do you have any further questions you'd like to ask me?"
 
 
             scenario_2 = "So the good news is that " \
@@ -199,7 +199,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + str(bad_nutr[list(bad_nutr.keys())[1]][0])  + "/ " \
             + str(bad_nutr[list(bad_nutr.keys())[1]][1]) \
             + get_grams(list(bad_nutr.keys())[1]) + " respectively). You could consider cutting down on these.\n\n" \
-            + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+            + "Do you have any further questions you'd like to ask me?"
 
 
             scenario_2 = "So the good news is that " \

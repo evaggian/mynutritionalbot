@@ -169,6 +169,37 @@ def get_sodium_scenario(user_NL_level):
         return random.choice(scenarios)
 
 
+def get_calories_scenario(user_NL_level):
+    if user_NL_level == 1:
+        scenarios = ["A calorie is the unit of energy our food supplies. " + 
+        "Our bodies use energy derived from the foods we consume, similar to how a car uses litres of gas per kilometer",
+        "The amount of energy in an item of food or drink is measured in calories." +
+        "When we eat and drink more calories than we use up, our bodies store the excess as body fat. " + 
+        "If this continues, over time we may put on weight."]
+
+        return random.choice(scenarios)
+
+    elif user_NL_level == 2:
+        scenarios = ["If you're not getting enough calories, chances are you're not getting enough vitamins and minerals either. " +
+        "Nutritional deficiencies may cause a long list of health complications.\n\n"
+        "The recommended daily calorie intake for men is 2,500kcal and for women 2,000kcal",
+        "If you eat more calories than you need, the body changes extra calories to fat. "
+        "Too much fat can lead to being overweight and other health problems.",
+        "The recommended daily calorie intake for men is 2,500kcal and for women 2,000kcal"]
+
+        return random.choice(scenarios)
+
+    elif user_NL_level == 3:
+        scenarios = ["The amount of energy in an item of food or drink is measured in calories. " + 
+        "As a guide, an average man needs around 2,500kcal (10,500kJ) a day to maintain a healthy body weight. "
+        "For an average woman, that figure is around 2,000kcal (8,400kJ) a day. ",
+        "Calories are a measure of energy and are commonly used to describe the energy content of foods. " +
+        "Your body is able to break down food molecules and use the stored energy for many different functions, "
+        "including movement, thought and growth. " +
+        "The recommended daily calorie intake for men is 2,500kcal and for women 2,000kcal"]
+
+        return random.choice(scenarios)
+
 def get_more_info(nutrient_list, user_NL_level):
     if len(nutrient_list) > 0:
         for i in range(len(nutrient_list)):
@@ -182,4 +213,6 @@ def get_more_info(nutrient_list, user_NL_level):
                 return get_sugar_scenario(user_NL_level)
             elif (nutrient_list[i] == 'sodium'):
                 return get_sodium_scenario(user_NL_level)
+            elif (nutrient_list[i] == 'calories'):
+                return get_calories_scenario(user_NL_level)
              

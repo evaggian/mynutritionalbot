@@ -11,7 +11,7 @@ def test_get_overview_text_lvl_1_good():
     r1 = "Well, Test, calorie-wise, you are lower than your target. Good job! 🔝\n" \
         + "Salt and carbohydrates are kept on a good level.\n" \
         + "Same for your protein and fat intake.\n\n" \
-        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+        + "Do you have any further questions you'd like to ask me?"
 
     r2 = "So, the good news is that salt and carbohydrates are around the recommended intake. 🎉🎉\n\n" \
         + "Similarly, your protein and fat are good and can help you achieve your goal.\n\n" \
@@ -38,13 +38,13 @@ def test_get_overview_text_lvl_1_bad(mocker):
         + "Salt and carbohydrates are kept on a good level.\n\n" \
         + "However, your protein and fat intake needs a bit of improvement.\n" \
         + "You could consider eating less potatoes and less potatoes.\n\n" \
-        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+        + "Do you have any further questions you'd like to ask me?"
 
     r3 = "Well, Test, calorie-wise, you are higher than your target.\n" \
         + "Salt and carbohydrates are kept on a good level.\n\n" \
         + "However, your protein and fat intake needs a bit of work.\n" \
         + "You could consider eating less potatoes and less potatoes.\n\n" \
-        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+        + "Do you have any further questions you'd like to ask me?"
 
     assert result in (r1, r2, r3)
 
@@ -63,7 +63,7 @@ def test_get_overview_text_lvl_2_good():
     r2 = "Well, Test, calorie-wise, you are 90% lower than your target. Good job! 🔝\n\n" \
         + "Sodium and carbohydrates are kept on a good level.\n\n" \
         + "Same for your fat and sugar intake.\n\n" \
-        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+        + "Do you have any further questions you'd like to ask me?"
 
     assert result in (r1, r2)
 
@@ -87,13 +87,13 @@ def test_get_overview_text_lvl_2_bad(mocker):
         + "Sodium and carbohydrates are kept on a good level.\n\n" \
         + "However, your protein and fat intake needs a bit of improvement. " \
         + "You could consider eating more fruits and more fruits.\n\n" \
-        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+        + "Do you have any further questions you'd like to ask me?"
 
     r3 = "Well, Test, calorie-wise, you are 21% higher than your target.\n\n" \
         + "Sodium and carbohydrates are kept on a good level.\n\n" \
         + "However, your protein and fat intake needs a bit of work. " \
         + "You could consider eating more fruits and more fruits.\n\n" \
-        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+        + "Do you have any further questions you'd like to ask me?"
 
     assert result in (r1, r2, r3)
 
@@ -113,7 +113,7 @@ def test_get_overview_text_lvl_3_good():
     r2 = "Well, Test, calorie-wise, you are 90% lower than your target. Good job! 🔝\n\n" \
         + "You had 0.0 out of 2300.0 mgrams of sodium and 14.0 out of 215.0 grams of carbohydrates which is great!\n\n" \
         + "Same for your fat and sugar intake (0.0/ 57.0 grams and 0.0/ 65.0 grams respectively).\n\n" \
-        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+        + "Do you have any further questions you'd like to ask me?"
 
     assert result in (r1, r2)
 
@@ -131,7 +131,7 @@ def test_get_overview_text_lvl_3_bad(mocker):
         + "You had 98.0 out of 2300.0 mgrams of sodium and 171.0 out of 215.0 grams of carbohydrates which is great!\n\n" \
         + "However, your protein(141.0 grams) and fat(89.0 grams) intake exceeded the recommended intake " \
         + "(141.0/ 86.0 grams and 89.0/ 57.0 grams respectively). You could consider cutting down on these.\n\n" \
-        + "Is everything clear to you? Do you have any further questions you'd like to ask me?"
+        + "Do you have any further questions you'd like to ask me?"
 
     r2 = "So the good news is that sodium and carbohydrates are on target.\n\n" \
         + "You had 98.0 mgrams of sodium and 171.0 grams of carbohydrates which are around the recommended intake " \

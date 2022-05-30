@@ -1,4 +1,4 @@
 twilio = {
-    "account_sid": "AC2b9035cb7313a35472b6b20cb24c7e46",
-    "auth_token": "8b33af25d22bb329c85f46a27dc50fd1"
+    "account_sid": "AC68a5c1256e84ef33bf073a9560ea5f52",
+    "auth_token": "be4c9c9f2b57eae48476a0b52e673f07"
 }
