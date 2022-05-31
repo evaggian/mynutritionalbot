@@ -24,11 +24,11 @@ def bot():
     initialize_db()
 
     # check if the user exists in the db based on the phone_number taken from Twilio
-    user_name = user_exists(request.values.get('From')[-13:])
+    user_name = user_exists(request.values.get('From')[9:])
 
     if not user_name:
         msg = resp.message()
-        msg.body("Sorry! You haven't signed up for this experiment.")
+        msg.body("Sorry there is a problem with your registration. Please contact the researcher at e.giannikou@uu.nl.")
         responded = True
         return str(resp)
 
