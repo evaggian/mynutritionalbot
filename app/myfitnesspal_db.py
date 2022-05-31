@@ -91,7 +91,6 @@ def get_food_info(user_name, date_input, nutrient, volume):
   
     if len(date_input) == 1:        # if there is only one date specificed
         friend_current_stats = client.get_date(date_input[0].year, date_input[0].month, date_input[0].day, username=user_name)  #retrieve the information from MFP
-
         if not friend_current_stats.meals:      # if the profile is private, return error message
             return -1 
 

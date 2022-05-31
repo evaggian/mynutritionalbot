@@ -1,23 +1,34 @@
 from nlg import get_overview_text, get_specific_nutrient_stats, replace_nutrient, get_food_info_nlg
 
 
-def test_get_overview_text_lvl_1_good():
+def test_get_overview_text_lvl_1_good(mocker):
+
+    mocker.patch('nlg_helper.is_end_of_day', return_value=True)
+
     user_NL_level = 1
     user_first_name = "Test"
     user_date_stats = {'calories': [657.0, 1720.0, 1063.0], 'carbohydrates': [32.0, 215.0, 183.0], 'fat': [26.0, 57.0, 31.0], 'protein': [70.0, 86.0, 16.0], 'sodium': [2.0, 2300.0, 2298.0], 'sugar': [22.0, 65.0, 43.0]}
 
     result = get_overview_text(user_NL_level, user_first_name, user_date_stats)
 
-    r1 = "Well, Test, calorie-wise, you are lower than your target. Good job! 🔝\n" \
+    r1 = "Well, Test, calorie-wise, you are lower than your target. " \
+        + "You have logged a very small amount of food. Did you forget to eat today?!\n" \
         + "Salt and carbohydrates are kept on a good level.\n" \
         + "Same for your protein and fat intake.\n\n" \
         + "Do you have any further questions you'd like to ask me?"
 
-    r2 = "So, the good news is that salt and carbohydrates are around the recommended intake. 🎉🎉\n\n" \
+    r2 = "Well, Test, calorie-wise, you are lower than your target. " \
+        + "You have logged a very small amount of food. You must be starving by now 🤔\n" \
+        + "Salt and carbohydrates are kept on a good level.\n" \
+        + "Same for your protein and fat intake.\n\n" \
+        + "Do you have any further questions you'd like to ask me?"
+
+    r3 = "So, the good news is that salt and carbohydrates are around the recommended intake. 🎉🎉\n\n" \
         + "Similarly, your protein and fat are good and can help you achieve your goal.\n\n" \
         + "Would you like to ask something more?"
 
-    assert result in (r1, r2)
+
+    assert result in (r1, r2, r3)
 
 
 def test_get_overview_text_lvl_1_bad(mocker):
@@ -49,7 +60,9 @@ def test_get_overview_text_lvl_1_bad(mocker):
     assert result in (r1, r2, r3)
 
 
-def test_get_overview_text_lvl_2_good():
+def test_get_overview_text_lvl_2_good(mocker):
+    mocker.patch('nlg_helper.is_end_of_day', return_value=True)
+
     user_NL_level = 2
     user_first_name = "Test"
     user_date_stats = {'calories': [170.0, 1720.0, 1550.0], 'carbohydrates': [14.0, 215.0, 201.0], 'fat': [0.0, 57.0, 57.0], 'protein': [2.0, 86.0, 84.0], 'sodium': [0.0, 2300.0, 2300.0], 'sugar': [0.0, 65.0, 65.0]}
@@ -60,12 +73,19 @@ def test_get_overview_text_lvl_2_good():
         + "Similarly, your fat (0.0/57.0 grams) and sugar (0.0/65.0 grams) are good and can help you achieve your goal.\n\n" \
         + "Would you like to ask something more?"
 
-    r2 = "Well, Test, calorie-wise, you are 90% lower than your target. Good job! 🔝\n\n" \
+    r2 = "Well, Test, calorie-wise, you are 90% lower than your target. " \
+        + "You have logged a very small amount of food. Did you forget to eat today?!\n\n" \
         + "Sodium and carbohydrates are kept on a good level.\n\n" \
         + "Same for your fat and sugar intake.\n\n" \
         + "Do you have any further questions you'd like to ask me?"
 
-    assert result in (r1, r2)
+    r3 = "Well, Test, calorie-wise, you are 90% lower than your target. " \
+        + "You have logged a very small amount of food. You must be starving by now 🤔\n\n" \
+        + "Sodium and carbohydrates are kept on a good level.\n\n" \
+        + "Same for your fat and sugar intake.\n\n" \
+        + "Do you have any further questions you'd like to ask me?"
+
+    assert result in (r1, r2, r3)
 
 
 def test_get_overview_text_lvl_2_bad(mocker):
@@ -98,7 +118,9 @@ def test_get_overview_text_lvl_2_bad(mocker):
     assert result in (r1, r2, r3)
 
 
-def test_get_overview_text_lvl_3_good():
+def test_get_overview_text_lvl_3_good(mocker):
+    mocker.patch('nlg_helper.is_end_of_day', return_value=True)
+
     user_NL_level = 3
     user_first_name = "Test"
     user_date_stats = {'calories': [170.0, 1720.0, 1550.0], 'carbohydrates': [14.0, 215.0, 201.0], 'fat': [0.0, 57.0, 57.0], 'protein': [2.0, 86.0, 84.0], 'sodium': [0.0, 2300.0, 2300.0], 'sugar': [0.0, 65.0, 65.0]}
@@ -110,12 +132,19 @@ def test_get_overview_text_lvl_3_good():
         + "Similarly, your fat (0.0/57.0 grams) and sugar (0.0/65.0 grams) are good and can help you achieve your goal.\n\n" \
         + "Would you like to ask something more?"
 
-    r2 = "Well, Test, calorie-wise, you are 90% lower than your target. Good job! 🔝\n\n" \
+    r2 = "Well, Test, calorie-wise, you are 90% lower than your target. " \
+        + "You have logged a very small amount of food. Did you forget to eat today?!\n\n" \
+        + "You had 0.0 out of 2300.0 mgrams of sodium and 14.0 out of 215.0 grams of carbohydrates which is great!\n\n" \
+        + "Same for your fat and sugar intake (0.0/ 57.0 grams and 0.0/ 65.0 grams respectively).\n\n" \
+        + "Do you have any further questions you'd like to ask me?"
+    
+    r3 = "Well, Test, calorie-wise, you are 90% lower than your target. " \
+        + "You have logged a very small amount of food. You must be starving by now 🤔\n" \
         + "You had 0.0 out of 2300.0 mgrams of sodium and 14.0 out of 215.0 grams of carbohydrates which is great!\n\n" \
         + "Same for your fat and sugar intake (0.0/ 57.0 grams and 0.0/ 65.0 grams respectively).\n\n" \
         + "Do you have any further questions you'd like to ask me?"
 
-    assert result in (r1, r2)
+    assert result in (r1, r2, r3)
 
 
 def test_get_overview_text_lvl_3_bad(mocker):

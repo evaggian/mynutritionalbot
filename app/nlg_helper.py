@@ -1,3 +1,4 @@
+from datetime import datetime
 import random
 
 
@@ -9,20 +10,51 @@ def compute_percentage(nutrient_stats):
         return round(((int(nutrient_stats[0])*100)/int(nutrient_stats[1])) - 100)
 
 
-# compute calorie percentage and return the text based on the NL_level
-def get_calories(calories_dic, user_NL_level):
-    percentage = compute_percentage(calories_dic)
+# check if it is almost end of day
+def is_end_of_day():
+    return True if datetime.now().time().hour >= 21 else False
 
-    if percentage > 0:
-        if user_NL_level == 1:
-            text = "higher than your target."
-        elif user_NL_level == 2 or user_NL_level == 3:
-            text = str(abs(percentage)) + "% higher than your target."
-    else:
-        if user_NL_level == 1:
-            text = "lower than your target. Good job! 🔝" 
-        elif user_NL_level == 2 or user_NL_level == 3:
-            text = str(abs(percentage)) + "% lower than your target. Good job! 🔝" 
+
+# compute calorie percentage and return the text based on the NL_level
+def get_calories(calories_dict, user_NL_level):
+    percentage = compute_percentage(calories_dict)
+
+    print("percentage: ", percentage)
+
+    if is_end_of_day():                                                     # it is the end of the day and
+        if percentage > 0:                                                  # the user is over his daily calorie intake
+            if user_NL_level == 1:
+                text = "higher than your target."
+            elif user_NL_level == 2 or user_NL_level == 3:
+                text = str(abs(percentage)) + "% higher than your target."
+        elif -60 < percentage < 0:                                          # the user is between minus 0-60% of his daily calorie intake  
+            if user_NL_level == 1:
+                text = "lower than your target. " 
+            elif user_NL_level == 2 or user_NL_level == 3:
+                text = str(abs(percentage)) + "% lower than your target. " 
+
+            text += "Good job! 🔝\n\n How about a small snack though to reach your goal?!"
+        else:                                                              # the user is between minus 60-10% of his daily calorie intake
+            if user_NL_level == 1:
+                text = "lower than your target. " 
+            elif user_NL_level == 2 or user_NL_level == 3:
+                text = str(abs(percentage)) + "% lower than your target. " 
+
+            text += random.choice(["You have logged a very small amount of food. Did you forget to eat today?!",
+                    "You have logged a very small amount of food. You must be starving by now 🤔"])
+    else:                                                                   # it is after 9pm and
+        if percentage > 0:                                                  # the user is over his daily calorie intake
+            if user_NL_level == 1:
+                text = "higher than your target."
+            elif user_NL_level == 2 or user_NL_level == 3:
+                text = str(abs(percentage)) + "% higher than your target."
+        else:                                                               # the user is minus 0-100% of his daily calorie intake
+            if user_NL_level == 1:                                          # but here the percentage doesn't matter,
+                text = "lower than your target. "                           # because the user can still eat a lot during the day
+            elif user_NL_level == 2 or user_NL_level == 3:
+                text = str(abs(percentage)) + "% lower than your target. " 
+
+            text += "Good job! 🔝\n\n Try getting the rest by the end of today though!"
 
     return text
 
