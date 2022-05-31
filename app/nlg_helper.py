@@ -54,7 +54,7 @@ def get_calories(calories_dict, user_NL_level):
             elif user_NL_level == 2 or user_NL_level == 3:
                 text = str(abs(percentage)) + "% lower than your target. " 
 
-            text += "Good job! 🔝\n\n Try getting the rest by the end of today though!"
+            text += "Good job! 🔝\n\nTry getting the rest by the end of today though!"
 
     return text
 

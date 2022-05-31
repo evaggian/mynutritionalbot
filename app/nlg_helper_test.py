@@ -82,10 +82,10 @@ def test_get_calories_is_not_end_of_day(mocker):
     calories_dict_16 = [2000.0, 1720.0, -280.0]        #  17%
 
     lvl_1_86 = get_calories(calories_dict_86, 1)
-    r1 = "lower than your target. Good job! 🔝\n\n Try getting the rest by the end of today though!"
+    r1 = "lower than your target. Good job! 🔝\n\nTry getting the rest by the end of today though!"
 
     lvl_2_86 = get_calories(calories_dict_86, 2)
-    r2 = "86% lower than your target. Good job! 🔝\n\n Try getting the rest by the end of today though!"
+    r2 = "86% lower than your target. Good job! 🔝\n\nTry getting the rest by the end of today though!"
 
     lvl_1_16 = get_calories(calories_dict_16, 1)
     r3 = "higher than your target."
