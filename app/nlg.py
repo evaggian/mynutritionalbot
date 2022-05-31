@@ -1,4 +1,5 @@
 import random
+import datetime
 
 from app.myfitnesspal_db import get_date_stats 
 from app.nlg_helper import get_bad_nutr, get_good_nutr, get_calories, get_food_examples, replace_nutrient, get_food_group_examples_less, get_food_group_examples_more, get_grams, get_volume_adjective, get_volume_adjective_reverse, get_percentage
@@ -13,13 +14,17 @@ def inform_overview(nutrient_list, date_list, insight, user_NL_level, user_name,
     elif user_date_stats is None:   # there are no entries for the date specified
         return None
 
+    if (len(date_list)) == 1 and (date_list[0] == datetime.date.today()):
+        today = True
+    else: today = False
+
     if not nutrient_list:
-        return get_overview_text(user_NL_level, user_first_name, user_date_stats)   # return nlg text - overview
+        return get_overview_text(today, user_NL_level, user_first_name, user_date_stats)   # return nlg text - overview
     else:
         return get_specific_nutrient_stats(nutrient_list, user_NL_level, user_date_stats)  # return nlg text - specific nutrient
 
 
-def get_overview_text(user_NL_level, user_first_name, user_date_stats):
+def get_overview_text(today, user_NL_level, user_first_name, user_date_stats):
     good_nutr = get_good_nutr(user_date_stats)      # retrieve top 2 nutrient data that have positive values
     bad_nutr = get_bad_nutr(user_date_stats)        # retrieve top 2 nutrient data that have negative values
 
@@ -35,7 +40,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
     if user_NL_level == 1:
 
         if no_bad_nutr:
-            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 1) + "\n" \
+            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(today, user_date_stats["calories"], 1) + "\n" \
             + list(good_nutr.keys())[0].capitalize()  + " and " \
             + list(good_nutr.keys())[1]  + " are kept on a good level.\nSame for your " \
             + list(bad_nutr.keys())[0]  + " and " \
@@ -50,7 +55,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + "Would you like to ask something more?"
 
         else:
-            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 1) + "\n" \
+            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(today, user_date_stats["calories"], 1) + "\n" \
             + list(good_nutr.keys())[0].capitalize()  + " and " \
             + list(good_nutr.keys())[1]  + " are kept on a good level.\n\nHowever, your " \
             + list(bad_nutr.keys())[0]  + " and " \
@@ -74,7 +79,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
     elif user_NL_level == 2:
 
         if no_bad_nutr:
-            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 2) + "\n\n" \
+            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(today, user_date_stats["calories"], 2) + "\n\n" \
             + list(good_nutr.keys())[0].capitalize() + " and " \
             + list(good_nutr.keys())[1] + " are kept on a good level.\n\nSame for your " \
             + list(bad_nutr.keys())[0] + " and " \
@@ -101,7 +106,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + "Would you like to ask something more?"
 
         else:
-            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 2) + "\n\n" \
+            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(today, user_date_stats["calories"], 2) + "\n\n" \
             + list(good_nutr.keys())[0].capitalize() + " and " \
             + list(good_nutr.keys())[1] + " are kept on a good level.\n\nHowever, your " \
             + list(bad_nutr.keys())[0] + " and " \
@@ -131,7 +136,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
 
     elif user_NL_level == 3:
         if no_bad_nutr:
-            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 3) + "\n" \
+            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(today, user_date_stats["calories"], 3) + "\n" \
             + "\nYou had " \
             + str(good_nutr[list(good_nutr.keys())[0]][0]) + " out of " \
             + str(good_nutr[list(good_nutr.keys())[0]][1]) \
@@ -177,7 +182,7 @@ def get_overview_text(user_NL_level, user_first_name, user_date_stats):
             + "are good and can help you achieve your goal.\n\nWould you like to ask something more?"
 
         else:
-            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(user_date_stats["calories"], 3) + "\n" \
+            scenario_1 = "Well, " + user_first_name + ", calorie-wise, you are " + get_calories(today, user_date_stats["calories"], 3) + "\n" \
             + "\nYou had " \
             + str(good_nutr[list(good_nutr.keys())[0]][0]) + " out of " \
             + str(good_nutr[list(good_nutr.keys())[0]][1]) \

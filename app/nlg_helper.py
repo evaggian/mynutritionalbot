@@ -16,7 +16,7 @@ def is_end_of_day():
 
 
 # compute calorie percentage and return the text based on the NL_level
-def get_calories(calories_dict, user_NL_level):
+def get_calories(today, calories_dict, user_NL_level):
     percentage = compute_percentage(calories_dict)
 
     print("percentage: ", percentage)
@@ -33,16 +33,22 @@ def get_calories(calories_dict, user_NL_level):
             elif user_NL_level == 2 or user_NL_level == 3:
                 text = str(abs(percentage)) + "% lower than your target. " 
 
-            text += "Good job! 🔝\n\n How about a small snack though to reach your goal?!"
+            if today:     #if the requested information was about today
+                text += "Good job! 🔝\n\nHow about a small snack though to reach your goal?!"
+            else:
+                text += "Good job! 🔝\n\nAlthough, next time, you could try having a small snack to reach your goal."
         else:                                                              # the user is between minus 60-10% of his daily calorie intake
             if user_NL_level == 1:
                 text = "lower than your target. " 
             elif user_NL_level == 2 or user_NL_level == 3:
                 text = str(abs(percentage)) + "% lower than your target. " 
 
-            text += random.choice(["You have logged a very small amount of food. Did you forget to eat today?!",
-                    "You have logged a very small amount of food. You must be starving by now 🤔"])
-    else:                                                                   # it is after 9pm and
+            if today:
+                text += random.choice(["You have logged a very small amount of food. Did you forget to eat today?!",
+                        "You have logged a very small amount of food. You must be starving by now 🤔"])
+            else:
+                text += "You logged a very small amount of food. Did you forget to eat back then?!"
+    else:                                                                   # it is before 9pm and
         if percentage > 0:                                                  # the user is over his daily calorie intake
             if user_NL_level == 1:
                 text = "higher than your target."
@@ -50,11 +56,14 @@ def get_calories(calories_dict, user_NL_level):
                 text = str(abs(percentage)) + "% higher than your target."
         else:                                                               # the user is minus 0-100% of his daily calorie intake
             if user_NL_level == 1:                                          # but here the percentage doesn't matter,
-                text = "lower than your target. "                           # because the user can still eat a lot during the day
+                text = "lower than your target. "                           
             elif user_NL_level == 2 or user_NL_level == 3:
                 text = str(abs(percentage)) + "% lower than your target. " 
 
-            text += "Good job! 🔝\n\nTry getting the rest by the end of today though!"
+            if today:    # the user can still eat a lot during the day
+                text += "Good job! 🔝\n\nTry getting the rest by the end of today though!"
+            else:                                                             # the user didn't eat much
+                text += "You logged a very small amount of food. Did you forget to eat back then?!"
 
     return text
 

@@ -1,6 +1,5 @@
 from nlg import get_overview_text, get_specific_nutrient_stats, replace_nutrient, get_food_info_nlg
 
-
 def test_get_overview_text_lvl_1_good(mocker):
 
     mocker.patch('nlg_helper.is_end_of_day', return_value=True)
@@ -9,7 +8,7 @@ def test_get_overview_text_lvl_1_good(mocker):
     user_first_name = "Test"
     user_date_stats = {'calories': [657.0, 1720.0, 1063.0], 'carbohydrates': [32.0, 215.0, 183.0], 'fat': [26.0, 57.0, 31.0], 'protein': [70.0, 86.0, 16.0], 'sodium': [2.0, 2300.0, 2298.0], 'sugar': [22.0, 65.0, 43.0]}
 
-    result = get_overview_text(user_NL_level, user_first_name, user_date_stats)
+    result = get_overview_text(True, user_NL_level, user_first_name, user_date_stats)
 
     r1 = "Well, Test, calorie-wise, you are lower than your target. " \
         + "You have logged a very small amount of food. Did you forget to eat today?!\n" \
@@ -38,7 +37,7 @@ def test_get_overview_text_lvl_1_bad(mocker):
     user_first_name = "Test"
     user_date_stats = {'calories': [2078.0, 1720.0, -358.0], 'carbohydrates': [171.0, 215.0, 44.0], 'fat': [89.0, 57.0, -32.0], 'protein': [141.0, 86.0, -55.0], 'sodium': [98.0, 2300.0, 2202.0], 'sugar': [37.0, 65.0, 28.0]}
 
-    result = get_overview_text(user_NL_level, user_first_name, user_date_stats)
+    result = get_overview_text(True,user_NL_level, user_first_name, user_date_stats)
 
     r1 = "So, the good news is that salt and carbohydrates are around the recommended intake. 🎉🎉\n\n" \
         + "However, you should consider cutting down on protein and fat, as it will not help you achieve your goal.\n\n" \
@@ -67,7 +66,7 @@ def test_get_overview_text_lvl_2_good(mocker):
     user_first_name = "Test"
     user_date_stats = {'calories': [170.0, 1720.0, 1550.0], 'carbohydrates': [14.0, 215.0, 201.0], 'fat': [0.0, 57.0, 57.0], 'protein': [2.0, 86.0, 84.0], 'sodium': [0.0, 2300.0, 2300.0], 'sugar': [0.0, 65.0, 65.0]}
 
-    result = get_overview_text(user_NL_level, user_first_name, user_date_stats)
+    result = get_overview_text(True, user_NL_level, user_first_name, user_date_stats)
 
     r1 = "So, the good news is that sodium (0.0/2300.0 mgrams) and carbohydrates (14.0/215.0 grams) are around the recommended intake. 🎉🎉\n\n" \
         + "Similarly, your fat (0.0/57.0 grams) and sugar (0.0/65.0 grams) are good and can help you achieve your goal.\n\n" \
@@ -95,7 +94,7 @@ def test_get_overview_text_lvl_2_bad(mocker):
     user_first_name = "Test"
     user_date_stats = {'calories': [2078.0, 1720.0, -358.0], 'carbohydrates': [171.0, 215.0, 44.0], 'fat': [89.0, 57.0, -32.0], 'protein': [141.0, 86.0, -55.0], 'sodium': [98.0, 2300.0, 2202.0], 'sugar': [37.0, 65.0, 28.0]}
 
-    result = get_overview_text(user_NL_level, user_first_name, user_date_stats)
+    result = get_overview_text(True, user_NL_level, user_first_name, user_date_stats)
 
     r1 = "So, the good news is that sodium (98.0/2300.0 mgrams) and carbohydrates (171.0/215.0 grams) " \
         + "are around the recommended intake. 🎉🎉\n\n" \
@@ -125,7 +124,7 @@ def test_get_overview_text_lvl_3_good(mocker):
     user_first_name = "Test"
     user_date_stats = {'calories': [170.0, 1720.0, 1550.0], 'carbohydrates': [14.0, 215.0, 201.0], 'fat': [0.0, 57.0, 57.0], 'protein': [2.0, 86.0, 84.0], 'sodium': [0.0, 2300.0, 2300.0], 'sugar': [0.0, 65.0, 65.0]}
 
-    result = get_overview_text(user_NL_level, user_first_name, user_date_stats)
+    result = get_overview_text(True, user_NL_level, user_first_name, user_date_stats)
 
     r1 = "So the good news is that sodium and carbohydrates are on target.\n\n" \
         + "You had 0.0 mgrams of sodium and 14.0 grams of carbohydrates which are around the recommended intake (2300.0 mgrams and 215.0 grams for each) 🔝.\n\n" \
@@ -139,7 +138,7 @@ def test_get_overview_text_lvl_3_good(mocker):
         + "Do you have any further questions you'd like to ask me?"
     
     r3 = "Well, Test, calorie-wise, you are 90% lower than your target. " \
-        + "You have logged a very small amount of food. You must be starving by now 🤔\n" \
+        + "You have logged a very small amount of food. You must be starving by now 🤔\n\n" \
         + "You had 0.0 out of 2300.0 mgrams of sodium and 14.0 out of 215.0 grams of carbohydrates which is great!\n\n" \
         + "Same for your fat and sugar intake (0.0/ 57.0 grams and 0.0/ 65.0 grams respectively).\n\n" \
         + "Do you have any further questions you'd like to ask me?"
@@ -154,7 +153,7 @@ def test_get_overview_text_lvl_3_bad(mocker):
     user_first_name = "Test"
     user_date_stats = {'calories': [2078.0, 1720.0, -358.0], 'carbohydrates': [171.0, 215.0, 44.0], 'fat': [89.0, 57.0, -32.0], 'protein': [141.0, 86.0, -55.0], 'sodium': [98.0, 2300.0, 2202.0], 'sugar': [37.0, 65.0, 28.0]}
 
-    result = get_overview_text(user_NL_level, user_first_name, user_date_stats)
+    result = get_overview_text(True, user_NL_level, user_first_name, user_date_stats)
 
     r1 = "Well, Test, calorie-wise, you are 21% higher than your target.\n\n" \
         + "You had 98.0 out of 2300.0 mgrams of sodium and 171.0 out of 215.0 grams of carbohydrates which is great!\n\n" \

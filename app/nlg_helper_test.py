@@ -1,5 +1,5 @@
 from nlg_helper import get_bad_nutr, get_good_nutr, get_percentage, compute_percentage, is_end_of_day, get_calories
-
+import datetime
 
 def test_get_percentage():
     assert get_percentage(20, 80) == "-75"
@@ -28,7 +28,7 @@ def test_is_end_of_day():
     assert is_end_of_day() == False
 
 
-def test_get_calories_is_end_of_day(mocker):
+def test_get_calories_is_end_of_day_today(mocker):
     errors = []
     mocker.patch('nlg_helper.is_end_of_day', return_value=True)
 
@@ -36,24 +36,24 @@ def test_get_calories_is_end_of_day(mocker):
     calories_dict_28 = [1234.0, 1720.0, 486.0]         # -28%
     calories_dict_16 = [2000.0, 1720.0, -280.0]        #  17%
 
-    lvl_1_86 = get_calories(calories_dict_86, 1)
+    lvl_1_86 = get_calories(True, calories_dict_86, 1)
     r1 = "lower than your target. You have logged a very small amount of food. Did you forget to eat today?!"
     r2 = "lower than your target. You have logged a very small amount of food. You must be starving by now 🤔"
 
-    lvl_2_86 = get_calories(calories_dict_86, 2)
+    lvl_2_86 = get_calories(True, calories_dict_86, 2)
     r3 = "86% lower than your target. You have logged a very small amount of food. Did you forget to eat today?!"
     r4 = "86% lower than your target. You have logged a very small amount of food. You must be starving by now 🤔"
 
-    lvl_1_28 = get_calories(calories_dict_28, 1)
-    r5 = "lower than your target. Good job! 🔝\n\n How about a small snack though to reach your goal?!"
+    lvl_1_28 = get_calories(True, calories_dict_28, 1)
+    r5 = "lower than your target. Good job! 🔝\n\nHow about a small snack though to reach your goal?!"
 
-    lvl_2_28 = get_calories(calories_dict_28, 2)
-    r6 = "28% lower than your target. Good job! 🔝\n\n How about a small snack though to reach your goal?!"
+    lvl_2_28 = get_calories(True, calories_dict_28, 2)
+    r6 = "28% lower than your target. Good job! 🔝\n\nHow about a small snack though to reach your goal?!"
 
-    lvl_1_16 = get_calories(calories_dict_16, 1)
+    lvl_1_16 = get_calories(True, calories_dict_16, 1)
     r7 = "higher than your target."
 
-    lvl_2_16 = get_calories(calories_dict_16, 2)
+    lvl_2_16 = get_calories(True, calories_dict_16, 2)
     r8 = "16% higher than your target."
 
     # replace assertions by conditions
@@ -74,6 +74,41 @@ def test_get_calories_is_end_of_day(mocker):
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
 
+def test_get_calories_is_end_of_day_other_day(mocker):
+    errors = []
+    mocker.patch('nlg_helper.is_end_of_day', return_value=True)
+
+    calories_dict_86 = [234.0, 1720.0, 1486.0]         # -86%
+    calories_dict_28 = [1234.0, 1720.0, 486.0]         # -28%
+    calories_dict_16 = [2000.0, 1720.0, -280.0]        #  17%
+
+    lvl_1_86 = get_calories(False, calories_dict_86, 1)
+    r1 = "lower than your target. You logged a very small amount of food. Did you forget to eat back then?!"
+
+    lvl_2_86 = get_calories(False, calories_dict_86, 2)
+    r2 = "86% lower than your target. You logged a very small amount of food. Did you forget to eat back then?!"
+
+    lvl_1_28 = get_calories(False, calories_dict_28, 1)
+    r3 = "lower than your target. Good job! 🔝\n\nAlthough, next time, you could try having a small snack to reach your goal."
+
+    lvl_2_28 = get_calories(False, calories_dict_28, 2)
+    r4 = "28% lower than your target. Good job! 🔝\n\nAlthough, next time, you could try having a small snack to reach your goal."
+
+
+    # replace assertions by conditions
+    if not lvl_1_86 == r1:
+        errors.append("failed test - lvl_1_86")
+    if not lvl_2_86 == r2:
+        errors.append("failed test - lvl_2_86")
+    if not lvl_1_28 == r3:
+        errors.append("failed test - lvl_1_28")
+    if not lvl_2_28 == r4:
+        errors.append("failed test - lvl_2_28")
+
+    # assert no error message has been registered, else print messages
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
+
+
 def test_get_calories_is_not_end_of_day(mocker):
     errors = []
     mocker.patch('nlg_helper.is_end_of_day', return_value=False)
@@ -81,16 +116,17 @@ def test_get_calories_is_not_end_of_day(mocker):
     calories_dict_86 = [234.0, 1720.0, 1486.0]         # -86%
     calories_dict_16 = [2000.0, 1720.0, -280.0]        #  17%
 
-    lvl_1_86 = get_calories(calories_dict_86, 1)
+
+    lvl_1_86 = get_calories(True, calories_dict_86, 1)
     r1 = "lower than your target. Good job! 🔝\n\nTry getting the rest by the end of today though!"
 
-    lvl_2_86 = get_calories(calories_dict_86, 2)
+    lvl_2_86 = get_calories(True, calories_dict_86, 2)
     r2 = "86% lower than your target. Good job! 🔝\n\nTry getting the rest by the end of today though!"
 
-    lvl_1_16 = get_calories(calories_dict_16, 1)
+    lvl_1_16 = get_calories(True, calories_dict_16, 1)
     r3 = "higher than your target."
 
-    lvl_2_16 = get_calories(calories_dict_16, 2)
+    lvl_2_16 = get_calories(True, calories_dict_16, 2)
     r4 = "16% higher than your target."
 
     # replace assertions by conditions
