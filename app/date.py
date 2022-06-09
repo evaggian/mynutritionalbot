@@ -7,7 +7,7 @@ import dateparser
 # it works only for relative dates
 # more info can be found here: https://dateparser.readthedocs.io/en/latest/
 
-  
+    
 def get_date(date):
 
     if "-" in date:                                                           # if these characters exist in the string
