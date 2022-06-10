@@ -1,8 +1,8 @@
 mysql = {
-    "host": "us-cdbr-east-05.cleardb.net",
-    "user": "b4f2b2fe4fe557",
-    "password": "ab0ff0af",
-    "db_name": "heroku_5f2973cbf7c2b89"
+    "host": "eu-cdbr-west-02.cleardb.net",
+    "user": "b409a1ab9ba282",
+    "password": "58e726fc",
+    "db_name": "heroku_d87b9e8ecce8a6a"
 }
 
 mfp = {
