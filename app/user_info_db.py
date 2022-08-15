@@ -18,7 +18,7 @@ def initialize_db():
     try:
         mycursor = mychatbot_db.cursor()
         mycursor.execute("CREATE DATABASE IF NOT EXISTS " + db_name)
-        mycursor.execute(""" CREATE TABLE IF NOT EXISTS `heroku_5f2973cbf7c2b89`.`users` (
+        mycursor.execute(""" CREATE TABLE IF NOT EXISTS `c`.`users` (
             `id` INT NOT NULL,
             `username` VARCHAR(45) NOT NULL,
             `nl_level` INT NOT NULL,
